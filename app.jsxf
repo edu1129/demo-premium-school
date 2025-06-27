@@ -1,7 +1,8 @@
+// app.js
 const express = require('express');
 const path = require('path');
-const fetch = require('node-fetch');
-require('dotenv').config();
+const fetch = require('node-fetch'); // Ensure you have node-fetch installed (npm install node-fetch)
+require('dotenv').config(); // Ensure you have dotenv installed (npm install dotenv)
 
 const app = express();
 app.use(express.json());
@@ -14,41 +15,11 @@ if (!GAS_URL) {
   process.exit(1);
 }
 
-async function processImageUrlsToBase64(data) {
-  if (!data || typeof data !== 'object') {
-    return;
-  }
-  
-  if (Array.isArray(data)) {
-    for (const item of data) {
-      await processImageUrlsToBase64(item);
-    }
-  } else {
-    for (const key in data) {
-      if (Object.prototype.hasOwnProperty.call(data, key)) {
-        if (key === 'PhotoURL' && typeof data[key] === 'string' && (data[key].startsWith('http://') || data[key].startsWith('https://'))) {
-          try {
-            const response = await fetch(data[key]);
-            if (response.ok) {
-              const imageBuffer = await response.buffer();
-              const contentType = response.headers.get('content-type') || 'image/jpeg';
-              data[key] = `data:${contentType};base64,${imageBuffer.toString('base64')}`;
-            } else {
-              console.warn(`Failed to fetch image ${data[key]}: Status ${response.status}`);
-            }
-          } catch (error) {
-            console.error(`Error converting image URL ${data[key]} to Base64:`, error.message);
-          }
-        }
-        
-        if (typeof data[key] === 'object') {
-          await processImageUrlsToBase64(data[key]);
-        }
-      }
-    }
-  }
-}
+// Serve static files from 'public' directory (if you have CSS/JS files there)
+// For this example, assuming index.html and tools.json are in the root.
+// If you create a public folder: app.use(express.static(path.join(__dirname, 'public')));
 
+// Serve index.html for the root route
 app.get('/', (req, res) => {
   const indexPath = path.join(__dirname, 'index.html');
   res.sendFile(indexPath, (err) => {
@@ -61,6 +32,7 @@ app.get('/', (req, res) => {
   });
 });
 
+// Serve tools.json
 app.get('/tools.json', (req, res) => {
   const toolsPath = path.join(__dirname, 'tools.json');
   res.sendFile(toolsPath, (err) => {
@@ -73,19 +45,8 @@ app.get('/tools.json', (req, res) => {
   });
 });
 
-app.get('/generator.json', (req, res) => {
-  const generatorPath = path.join(__dirname, 'generator.json');
-  res.sendFile(generatorPath, (err) => {
-    if (err) {
-      console.error("Error sending generator.json:", err);
-      if (!res.headersSent) {
-        res.status(err.status || 500).send("Error loading generator configuration.");
-      }
-    }
-  });
-});
 
-
+// Login endpoint proxy
 app.post('/login', async (req, res) => {
   const { mobile, password } = req.body;
   if (!mobile || !password) {
@@ -95,10 +56,11 @@ app.post('/login', async (req, res) => {
   try {
     const gasResponse = await fetch(GAS_URL, {
       method: 'POST',
+      // Removed 'credentials: 'omit'' as it's default for same-origin and not typically needed for server-to-server
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json' // Sending JSON to GAS
       },
-      body: JSON.stringify({ action: 'login', mobile, password })
+      body: JSON.stringify({ action: 'login', mobile, password }) // Send data as JSON
     });
     
     const responseBodyText = await gasResponse.text();
@@ -106,15 +68,21 @@ app.post('/login', async (req, res) => {
     try {
       result = JSON.parse(responseBodyText);
     } catch (parseError) {
-      console.error('Failed to parse GAS response for login:', responseBodyText.substring(0, 500));
+      console.error('Failed to parse GAS response for login:', responseBodyText.substring(0, 500)); // Log snippet
       return res.status(500).json({ success: false, error: `GAS returned non-JSON response. Status: ${gasResponse.status}` });
     }
     
+    // GAS script might return 200 OK even for logical failures (e.g. bad creds)
+    // The 'result.success' field from GAS is the true indicator for client.
+    // The HTTP status here is about the proxy-to-GAS communication.
     if (!gasResponse.ok) {
       console.error(`GAS login request failed with HTTP Status: ${gasResponse.status}`, result);
+      // Forward GAS error status if meaningful, or use a generic one.
       return res.status(gasResponse.status || 502).json(result || { success: false, error: `Upstream GAS error: ${gasResponse.status}` });
     }
     
+    // If GAS request was ok (e.g. 200), send the result from GAS.
+    // This result will contain { success: true/false, spreadsheetId, schoolName, message, etc. }
     res.status(200).json(result);
     
   } catch (error) {
@@ -123,20 +91,23 @@ app.post('/login', async (req, res) => {
   }
 });
 
+
+// Generic API proxy for other actions
 app.post('/api/:action', async (req, res) => {
   const action = req.params.action;
-  const payload = req.body || {};
+  const payload = req.body || {}; // Payload from client
   
   if (!action) {
     return res.status(400).json({ success: false, error: 'Action parameter is required' });
   }
   
   try {
+    // Prepare payload to send to GAS (it already contains action from client)
     const bodyToGAS = JSON.stringify({ action, ...payload });
     
     const gasResponse = await fetch(GAS_URL, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 'Content-Type': 'application/json' }, // GAS expects JSON now
       body: bodyToGAS
     });
     
@@ -154,11 +125,7 @@ app.post('/api/:action', async (req, res) => {
       return res.status(gasResponse.status || 502).json(result || { success: false, error: `Upstream GAS error for ${action}: ${gasResponse.status}` });
     }
     
-    if (gasResponse.ok && result.success && result.data) {
-      await processImageUrlsToBase64(result.data);
-    }
-    
-    res.status(200).json(result);
+    res.status(200).json(result); // Forward the JSON result from GAS
     
   } catch (error) {
     console.error(`API proxy error for action "${action}":`, error);
@@ -166,10 +133,14 @@ app.post('/api/:action', async (req, res) => {
   }
 });
 
+
+// Health check endpoint
 app.get('/health', (req, res) => {
   res.status(200).send('OK');
 });
 
+
+// Catch-all for 404 Not Found routes (should be last)
 app.use((req, res) => {
   if (!res.headersSent) {
     res.status(404).send("Resource not found on proxy.");
