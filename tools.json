@@ -1,0 +1,320 @@
+[
+  {
+    "name": "AI question paper genrater",
+    "imageUrl": "https://edu1129.github.io/Test/question.jpg",
+    "description": "You can create as many questions as you want for your school or coaching institute in just one click.can you get it generated ",
+    "url": "https://question1129.vercel.app"
+  },
+  {
+    "name": "marksheet genrater",
+    "imageUrl": "https://rahmat1129.github.io/web/marksheet.jpg",
+    "description": "Convert Microsoft Word documents (DOC, DOCX) to PDF files.",
+    "url": "https://rahmat1129.github.io/web/pro marksheet.html"
+  },
+  {
+    "name": "PDF to Excel",
+    "imageUrl": "https://rahmat1129.github.io/web/marksheet.jpg",
+    "description": "you can upload your json data and genrate customisable marksheet .",
+    "url": "https://rahmat1129.github.io/web/json_marksheet.html"
+  },
+  {
+    "name": "Excel to ERP",
+    "imageUrl": "https://rahmat1129.github.io/web/excel.jpg",
+    "description": "Convert Excel spreadsheets (XLS, XLSX) to PDF files.",
+    "url": "https://rahmat1129.github.io/web/excel to erp.html"
+  },
+  {
+    "name": "PDF to PowerPoint",
+    "imageUrl": "https://via.placeholder.com/80/e67e22/ffffff?text=PPT",
+    "description": "Convert PDF presentations back to editable PowerPoint files.",
+    "url": "https://www.ilovepdf.com/pdf_to_powerpoint"
+  },
+  {
+    "name": "PowerPoint to PDF",
+    "imageUrl": "https://via.placeholder.com/80/d35400/ffffff?text=PPT",
+    "description": "Convert PowerPoint presentations (PPT, PPTX) to PDF.",
+    "url": "https://www.ilovepdf.com/powerpoint_to_pdf"
+  },
+  {
+    "name": "JPG to PDF",
+    "imageUrl": "https://via.placeholder.com/80/f1c40f/000000?text=JPG",
+    "description": "Convert JPG images into a single PDF document.",
+    "url": "https://www.ilovepdf.com/jpg_to_pdf"
+  },
+  {
+    "name": "PNG to PDF",
+    "imageUrl": "https://via.placeholder.com/80/f39c12/ffffff?text=PNG",
+    "description": "Convert PNG images into PDF files. Combine multiple PNGs.",
+    "url": "https://smallpdf.com/png-to-pdf"
+  },
+  {
+    "name": "Image to PDF (General)",
+    "imageUrl": "https://via.placeholder.com/80/e74c3c/ffffff?text=IMG",
+    "description": "Convert various image formats (GIF, TIFF, BMP) to PDF.",
+    "url": "https://www.onlineconverter.com/image-to-pdf"
+  },
+  {
+    "name": "PDF to JPG",
+    "imageUrl": "https://via.placeholder.com/80/c0392b/ffffff?text=PDF",
+    "description": "Convert each page of a PDF into separate JPG images.",
+    "url": "https://www.ilovepdf.com/pdf_to_jpg"
+  },
+  {
+    "name": "Compress PDF",
+    "imageUrl": "https://via.placeholder.com/80/95a5a6/ffffff?text=ZIP",
+    "description": "Reduce the file size of PDF documents for easier sharing.",
+    "url": "https://www.ilovepdf.com/compress_pdf"
+  },
+  {
+    "name": "Merge PDF",
+    "imageUrl": "https://via.placeholder.com/80/7f8c8d/ffffff?text=MRG",
+    "description": "Combine multiple PDF files into a single document.",
+    "url": "https://www.ilovepdf.com/merge_pdf"
+  },
+  {
+    "name": "Split PDF",
+    "imageUrl": "https://via.placeholder.com/80/34495e/ffffff?text=SPL",
+    "description": "Extract specific pages or ranges from a PDF file.",
+    "url": "https://www.ilovepdf.com/split_pdf"
+  },
+  {
+    "name": "Unlock PDF",
+    "imageUrl": "https://via.placeholder.com/80/2c3e50/ffffff?text=KEY",
+    "description": "Remove password protection from PDF files (if you own it).",
+    "url": "https://www.ilovepdf.com/unlock_pdf"
+  },
+  {
+    "name": "Protect PDF",
+    "imageUrl": "https://via.placeholder.com/80/1abc9c/ffffff?text=LCK",
+    "description": "Add a password to protect your PDF documents.",
+    "url": "https://www.ilovepdf.com/protect_pdf"
+  },
+  {
+    "name": "Rotate PDF",
+    "imageUrl": "https://via.placeholder.com/80/2ecc71/ffffff?text=ROT",
+    "description": "Rotate pages in your PDF files to the correct orientation.",
+    "url": "https://www.ilovepdf.com/rotate_pdf"
+  },
+  {
+    "name": "Add Page Numbers to PDF",
+    "imageUrl": "https://via.placeholder.com/80/16a085/ffffff?text=123",
+    "description": "Insert page numbers into your PDF documents easily.",
+    "url": "https://www.ilovepdf.com/add_page_numbers"
+  },
+  {
+    "name": "Add Watermark to PDF",
+    "imageUrl": "https://via.placeholder.com/80/27ae60/ffffff?text=WTM",
+    "description": "Add a text or image watermark to your PDF files.",
+    "url": "https://www.ilovepdf.com/add_watermark"
+  },
+  {
+    "name": "HTML to PDF",
+    "imageUrl": "https://via.placeholder.com/80/2980b9/ffffff?text=HTML",
+    "description": "Convert web pages (HTML) to PDF documents.",
+    "url": "https://www.sejda.com/html-to-pdf"
+  },
+  {
+    "name": "ePub to PDF",
+    "imageUrl": "https://via.placeholder.com/80/8e44ad/ffffff?text=EPUB",
+    "description": "Convert ePub e-book files to PDF format.",
+    "url": "https://www.onlineconverter.com/epub-to-pdf"
+  },
+  {
+    "name": "PDF to ePub",
+    "imageUrl": "https://via.placeholder.com/80/9b59b6/ffffff?text=PDF",
+    "description": "Convert PDF documents to ePub e-book format.",
+    "url": "https://www.onlineconverter.com/pdf-to-epub"
+  },
+  {
+    "name": "Text to PDF",
+    "imageUrl": "https://via.placeholder.com/80/bdc3c7/000000?text=TXT",
+    "description": "Convert plain text files (TXT) or pasted text to PDF.",
+    "url": "https://www.textlocal.com/tools/text-to-pdf-converter/"
+  },
+  {
+    "name": "CSV to PDF",
+    "imageUrl": "https://via.placeholder.com/80/ecf0f1/000000?text=CSV",
+    "description": "Convert CSV (Comma Separated Values) files to PDF.",
+    "url": "https://www.convertcsv.com/csv-to-pdf.htm"
+  },
+  {
+    "name": "Image to Text (OCR)",
+    "imageUrl": "https://via.placeholder.com/80/f1c40f/000000?text=OCR",
+    "description": "Extract text from images using Optical Character Recognition.",
+    "url": "https://www.onlineocr.net/"
+  },
+  {
+    "name": "PDF to Text (OCR)",
+    "imageUrl": "https://via.placeholder.com/80/e74c3c/ffffff?text=OCR",
+    "description": "Extract text from scanned PDFs using OCR technology.",
+    "url": "https://www.newocr.com/"
+  },
+  {
+    "name": "Image Resizer",
+    "imageUrl": "https://via.placeholder.com/80/3498db/ffffff?text=RSZ",
+    "description": "Resize images to specific dimensions or percentages.",
+    "url": "https://picresize.com/"
+  },
+  {
+    "name": "Image Cropper",
+    "imageUrl": "https://via.placeholder.com/80/2ecc71/ffffff?text=CRP",
+    "description": "Crop images online to focus on a specific area.",
+    "url": "https://www.iloveimg.com/crop-image"
+  },
+  {
+    "name": "Image Format Converter",
+    "imageUrl": "https://via.placeholder.com/80/f39c12/ffffff?text=ICO",
+    "description": "Convert images between formats like JPG, PNG, GIF, WebP.",
+    "url": "https://www.iloveimg.com/convert-to-jpg"
+  },
+  {
+    "name": "Compress Images (JPG/PNG)",
+    "imageUrl": "https://via.placeholder.com/80/e67e22/ffffff?text=CMP",
+    "description": "Reduce the file size of JPG or PNG images.",
+    "url": "https://tinypng.com/"
+  },
+  {
+    "name": "Background Remover",
+    "imageUrl": "https://via.placeholder.com/80/e74c3c/ffffff?text=BKG",
+    "description": "Automatically remove the background from images.",
+    "url": "https://www.remove.bg/"
+  },
+  {
+    "name": "HEIC to JPG Converter",
+    "imageUrl": "https://via.placeholder.com/80/9b59b6/ffffff?text=HEIC",
+    "description": "Convert HEIC (Apple format) images to JPG.",
+    "url": "https://heictojpg.com/"
+  },
+  {
+    "name": "WebP to JPG/PNG",
+    "imageUrl": "https://via.placeholder.com/80/34495e/ffffff?text=WEBP",
+    "description": "Convert WebP images to more common JPG or PNG formats.",
+    "url": "https://cloudconvert.com/webp-to-jpg"
+  },
+  {
+    "name": "SVG to PNG Converter",
+    "imageUrl": "https://via.placeholder.com/80/1abc9c/ffffff?text=SVG",
+    "description": "Convert Scalable Vector Graphics (SVG) to PNG images.",
+    "url": "https://cloudconvert.com/svg-to-png"
+  },
+  {
+    "name": "Online Document Editor (Basic)",
+    "imageUrl": "https://via.placeholder.com/80/2c3e50/ffffff?text=EDIT",
+    "description": "Basic online editor for TXT, RTF, or simple DOCX viewing/editing.",
+    "url": "https://www.online-document-editor.com/"
+  },
+  {
+    "name": "Google Docs Viewer",
+    "imageUrl": "https://via.placeholder.com/80/4285F4/ffffff?text=GDoc",
+    "description": "View Google Docs (requires file to be shareable link). Often needs specific embed URL.",
+    "url": "https://docs.google.com/viewer"
+  },
+  {
+    "name": "Microsoft Office File Viewer",
+    "imageUrl": "https://via.placeholder.com/80/EB3C00/ffffff?text=MSFT",
+    "description": "View Word, Excel, PowerPoint files online (often requires file to be hosted like on OneDrive for full embed).",
+    "url": "https://view.officeapps.live.com/op/view.aspx?src=[URL_OF_YOUR_FILE]"
+  },
+  {
+    "name": "RTF to PDF",
+    "imageUrl": "https://via.placeholder.com/80/7f8c8d/ffffff?text=RTF",
+    "description": "Convert Rich Text Format (RTF) files to PDF.",
+    "url": "https://www.zamzar.com/convert/rtf-to-pdf/"
+  },
+  {
+    "name": "ODT to PDF (OpenOffice/Libre)",
+    "imageUrl": "https://via.placeholder.com/80/16a085/ffffff?text=ODT",
+    "description": "Convert OpenDocument Text (ODT) files to PDF.",
+    "url": "https://www.zamzar.com/convert/odt-to-pdf/"
+  },
+  {
+    "name": "ODS to PDF (OpenOffice/Libre Calc)",
+    "imageUrl": "https://via.placeholder.com/80/27ae60/ffffff?text=ODS",
+    "description": "Convert OpenDocument Spreadsheet (ODS) files to PDF.",
+    "url": "https://www.zamzar.com/convert/ods-to-pdf/"
+  },
+  {
+    "name": "ODP to PDF (OpenOffice/Libre Impress)",
+    "imageUrl": "https://via.placeholder.com/80/2980b9/ffffff?text=ODP",
+    "description": "Convert OpenDocument Presentation (ODP) files to PDF.",
+    "url": "https://www.zamzar.com/convert/odp-to-pdf/"
+  },
+  {
+    "name": "XPS to PDF",
+    "imageUrl": "https://via.placeholder.com/80/8e44ad/ffffff?text=XPS",
+    "description": "Convert XPS (XML Paper Specification) files to PDF.",
+    "url": "https://xpstopdf.com/"
+  },
+  {
+    "name": "PDF to XPS",
+    "imageUrl": "https://via.placeholder.com/80/9b59b6/ffffff?text=PDF",
+    "description": "Convert PDF files to XPS format.",
+    "url": "https://pdfcandy.com/pdf-to-xps.html"
+  },
+  {
+    "name": "Markdown to PDF",
+    "imageUrl": "https://via.placeholder.com/80/34495e/ffffff?text=MD",
+    "description": "Convert Markdown formatted text to PDF.",
+    "url": "https://md2pdf.netlify.app/"
+  },
+  {
+    "name": "Online LaTeX Editor (to PDF)",
+    "imageUrl": "https://via.placeholder.com/80/c0392b/ffffff?text=TeX",
+    "description": "Edit LaTeX documents online and compile to PDF (e.g., Overleaf for projects).",
+    "url": "https://www.overleaf.com/project"
+  },
+  {
+    "name": "CSV to Excel (XLSX)",
+    "imageUrl": "https://via.placeholder.com/80/27ae60/ffffff?text=CSV",
+    "description": "Convert CSV files to native Excel (XLSX) format.",
+    "url": "https://cloudconvert.com/csv-to-xlsx"
+  },
+  {
+    "name": "Excel (XLSX) to CSV",
+    "imageUrl": "https://via.placeholder.com/80/16a085/ffffff?text=XLS",
+    "description": "Convert Excel (XLSX) files to CSV format.",
+    "url": "https://cloudconvert.com/xlsx-to-csv"
+  },
+  {
+    "name": "Simple QR Code Generator",
+    "imageUrl": "https://via.placeholder.com/80/3498db/ffffff?text=QR",
+    "description": "Generate QR codes for URLs, text, or contact info, often used for documents.",
+    "url": "https://www.the-qrcode-generator.com/"
+  },
+  {
+    "name": "Scan Document to PDF (Mobile)",
+    "imageUrl": "https://via.placeholder.com/80/f1c40f/000000?text=SCAN",
+    "description": "Apps like Adobe Scan, Microsoft Lens (links to app stores/info page).",
+    "url": "https://acrobat.adobe.com/us/en/mobile/scanner-app.html"
+  },
+  {
+    "name": "Create Fillable PDF Forms",
+    "imageUrl": "https://via.placeholder.com/80/2ecc71/ffffff?text=FORM",
+    "description": "Tools to create PDF forms that users can fill out.",
+    "url": "https://www.jotform.com/fillable-pdf-form-creator/"
+  },
+  {
+    "name": "PSD to JPG/PNG",
+    "imageUrl": "https://via.placeholder.com/80/5dade2/ffffff?text=PSD",
+    "description": "Convert Photoshop PSD files to common image formats online.",
+    "url": "https://psdviewer.org/"
+  },
+  {
+    "name": "AI/EPS to JPG/PNG/SVG",
+    "imageUrl": "https://via.placeholder.com/80/d35400/ffffff?text=AI",
+    "description": "Convert Adobe Illustrator AI or EPS vector files to other formats.",
+    "url": "https://cloudconvert.com/ai-to-svg"
+  },
+  {
+    "name": "TIFF to PDF",
+    "imageUrl": "https://via.placeholder.com/80/7f8c8d/ffffff?text=TIFF",
+    "description": "Convert TIFF (Tagged Image File Format) images to PDF.",
+    "url": "https://www.sodapdf.com/tiff-to-pdf/"
+  },
+  {
+    "name": "PDF Editor (Online)",
+    "imageUrl": "https://via.placeholder.com/80/95a5a6/ffffff?text=EDIT",
+    "description": "Edit PDF text, images, annotate, fill forms online (e.g., Sejda, Smallpdf).",
+    "url": "https://www.sejda.com/pdf-editor"
+  }
+]
