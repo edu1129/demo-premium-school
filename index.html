@@ -1,4 +1,4 @@
-
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -458,7 +458,7 @@
             <li id="nav-dashboard" class="active"><a data-view="dashboard-view"><i class="fas fa-tachometer-alt"></i><span class="menu-text">Dashboard</span></a></li>
             <li id="nav-students"><a data-view="student-list-view"><i class="fas fa-user-graduate"></i><span class="menu-text">Students</span></a></li>
             <li id="nav-staff"><a data-view="staff-list-view"><i class="fas fa-users-cog"></i><span class="menu-text">Staff</span></a></li>
-            <li id="nav-add-fees"><a data-view="add-fees-view"><i class="fas fa-file-invoice-dollar"></i><span class="menu-text">Add Fees</span></a></li>
+            <li id="nav-add-fees"><a data-view="add-fees-view"><i class="fas fa-file-invoice-dollar"></i><span class="menu-text">Add Bulk Fees</span></a></li>
             <li id="nav-add-result"><a data-view="add-results-view"><i class="fas fa-award"></i><span class="menu-text">Add Result</span></a></li>
             <li id="nav-tools"><a data-view="tools-view"><i class="fas fa-tools"></i><span class="menu-text">Tools Hub</span></a></li>
             <li class="sidebar-divider" id="generator-divider" style="display: none;"></li>
@@ -668,6 +668,7 @@
 <script>
     // --- State Variables ---
     let schoolSpreadsheetId = null;
+    let authToken = null;
     let studentsData = []; 
     let currentClassStudents = []; 
     let classMapping = {}; 
@@ -785,14 +786,140 @@
     function formatDisplayDate(dateString) { if (!dateString) return 'N/A'; try { const date = new Date(dateString); if (isNaN(date)) return dateString; return date.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }); } catch (e) { return dateString; } }
     function formatCurrency(amount) { return parseFloat(amount || 0).toLocaleString('en-IN', { style: 'currency', currency: 'INR', minimumFractionDigits: 0, maximumFractionDigits:2 }); } // Adjusted for INR style and optional decimal for paisa
 
-    // --- API Call Function (Unchanged) ---
-    async function callBackendApi(action, payload = {}) { showLoading(); const endpoint = `/api/${action}`; if (schoolSpreadsheetId && action !== 'login') payload.spreadsheetId = schoolSpreadsheetId; try { const res = await fetch(endpoint, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) }); if (!res.ok) { let eTxt = `HTTP ${res.status}`; let resultError = 'Request failed'; try { const errorJson = await res.json(); resultError = errorJson.error || errorJson.message || JSON.stringify(errorJson); eTxt += ` - ${resultError}`; } catch (parseError) { try { eTxt += ` - ${(await res.text()).substring(0, 200)}`; } catch(readError){} } throw new Error(eTxt); } const result = await res.json(); hideLoading(); if (result.success === false && result.errorType === 'AUTH_ERROR') { showLoginView(); showMessage(D.loginMessage, result.error || "Authentication failed. Please log in again.", 'error'); return { success: false, error: "Authentication failed." }; } return result; } catch (err) { console.error(`API Error (${action}):`, err); hideLoading(); const isAutoLoggedIn = localStorage.getItem('schoolSpreadsheetId'); if (isAutoLoggedIn && action !== 'login') { showMessage(D.loginMessage, `Session may have expired. Please log in again. (${err.message})`, 'error'); showLoginView(); } else { let msgEl = D.loginMessage; if (D.appContainer.classList.contains('visible')) { const modal = document.querySelector('.modal[style*="display: block"]'); if (modal) msgEl = modal.querySelector('.message[id$="-message"]'); else msgEl = document.getElementById(`${currentView.replace(/-/g, '')}-message`) || D.studentListMessage || D.genericSheetMessage || D.addResultsMessage || D.toolsMessage || D.dashboardMessage || D.staffListMessage || D.addFeesMessage; } showMessage(msgEl || D.loginMessage, `Network/Server Error: ${err.message}`, 'error'); } return { success: false, error: err.message }; } }
+    async function callBackendApi(action, payload = {}) {
+        showLoading();
+        // NOTE: The endpoint needs to be correctly configured for your environment.
+        // For a standard GAS Web App, this should be the script URL. These relative URLs
+        // assume a custom domain with a proxy/router is being used.
+        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycby5t9aP5qOqd3d5sI9wA4yR6r7yH3d_bS2wZcV5gI4tX8aN7kP2yR3tQ0L9jF8gK0c4/exec';
+        
+        // Add auth details to every request
+        payload.action = action;
+        if (schoolSpreadsheetId) {
+            payload.spreadsheetId = schoolSpreadsheetId;
+        }
+        if (authToken) {
+            payload.token = authToken;
+        }
+        
+        try {
+            const res = await fetch(SCRIPT_URL, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'text/plain;charset=utf-8', // Required for GAS 'text/plain' to avoid CORS preflight
+                },
+                body: JSON.stringify(payload)
+            });
 
-    // --- Auth & View Management (Login & Show App adjusted slightly) ---
-    function showLoginView() { D.loginContainer.classList.remove('hidden'); D.appContainer.classList.remove('visible'); D.loginSection.style.display='block'; D.premiumInfoSection.style.display='none'; D.loginForm.reset(); hideMessage(D.loginMessage); D.loginButton.classList.remove('processing'); D.loginButton.disabled = false; schoolSpreadsheetId = null; studentsData = []; classMapping = {}; feeTypes = []; staffListData = []; cachedTools = []; cachedGenerators = []; currentResultConfig = null; currentStudentForResult = null; studentsWithResults.clear(); currentGenericHeaders=[]; currentGenericData=[]; clearDynamicMenuItems(); Object.values(dashboardCharts).forEach(chart => chart?.destroy()); dashboardCharts = {}; localStorage.removeItem('schoolSpreadsheetId'); localStorage.removeItem('userMobile'); D.userGreeting.textContent = ''; document.body.style.overflow = ''; }
-    async function showAppView() { D.loginContainer.classList.add('hidden'); D.appContainer.classList.add('visible'); const storedMobile = localStorage.getItem('userMobile'); if (storedMobile) D.userGreeting.textContent = `Welcome, ${sanitizeHTML(storedMobile)}`; else D.userGreeting.textContent = ''; if (schoolSpreadsheetId) { await loadInitialAppData(); switchView('dashboard-view', 'Dashboard', 'nav-dashboard'); } else if (localStorage.getItem('schoolSpreadsheetId')) { schoolSpreadsheetId = localStorage.getItem('schoolSpreadsheetId'); await loadInitialAppData(); switchView('dashboard-view', 'Dashboard', 'nav-dashboard'); } else { showLoginView(); } }
+            if (!res.ok) {
+                let errorText = `HTTP Error: ${res.status}`;
+                let resultError = 'Request failed. Please try again.';
+                try {
+                    const errorJson = await res.json();
+                    resultError = errorJson.error || errorJson.message || JSON.stringify(errorJson);
+                    errorText += ` - ${resultError}`;
+                } catch (parseError) {
+                    try { errorText += ` - ${(await res.text()).substring(0, 200)}`; } catch (readError) {}
+                }
+                throw new Error(errorText);
+            }
+            
+            const result = await res.json();
+            hideLoading();
+
+            if (result.success === false && result.message?.toLowerCase().includes('token')) {
+                showMessage(D.loginMessage, result.message || "Session expired. Please log in again.", 'error');
+                showLoginView();
+                return { success: false, error: "Authentication failed." }; 
+            }
+             if (result.success === false && result.message?.toLowerCase().includes('permission denied')) {
+                const activeMessageEl = document.getElementById(`${currentView.replace(/-/g, '')}-message`) || D.dashboardMessage;
+                showMessage(activeMessageEl, result.message, 'warning', false); // Keep permission messages visible
+            }
+
+
+            return result;
+
+        } catch (err) {
+            console.error(`API Error (${action}):`, err);
+            hideLoading();
+            
+            const currentMessageElement = document.getElementById(`${currentView.replace(/-/g, '')}-message`) || D.loginMessage;
+            showMessage(currentMessageElement, `Network/Server Error: ${err.message}`, 'error');
+            
+            if (schoolSpreadsheetId && action !== 'login' && err.message?.includes('token')) {
+                 showLoginView();
+            }
+            
+            return { success: false, error: err.message };
+        }
+    }
+
+
+    function showLoginView() {
+        D.loginContainer.classList.remove('hidden'); D.appContainer.classList.remove('visible'); D.loginSection.style.display='block'; D.premiumInfoSection.style.display='none';
+        D.loginForm.reset(); hideMessage(D.loginMessage); D.loginButton.classList.remove('processing'); D.loginButton.disabled = false;
+        schoolSpreadsheetId = null; authToken = null;
+        studentsData = []; classMapping = {}; feeTypes = []; staffListData = []; cachedTools = []; cachedGenerators = [];
+        currentResultConfig = null; currentStudentForResult = null; studentsWithResults.clear(); currentGenericHeaders=[]; currentGenericData=[];
+        clearDynamicMenuItems(); Object.values(dashboardCharts).forEach(chart => chart?.destroy()); dashboardCharts = {};
+        localStorage.removeItem('schoolSpreadsheetId'); localStorage.removeItem('userMobile'); localStorage.removeItem('authToken');
+        D.userGreeting.textContent = ''; document.body.style.overflow = '';
+    }
+    
+    async function showAppView() {
+        D.loginContainer.classList.add('hidden');
+        D.appContainer.classList.add('visible');
+        const storedMobile = localStorage.getItem('userMobile');
+        if (storedMobile) D.userGreeting.textContent = `Welcome, ${sanitizeHTML(storedMobile)}`; else D.userGreeting.textContent = '';
+
+        if (schoolSpreadsheetId && authToken) {
+             await loadInitialAppData();
+             switchView('dashboard-view', 'Dashboard', 'nav-dashboard');
+        } else if (localStorage.getItem('schoolSpreadsheetId') && localStorage.getItem('authToken')) {
+            schoolSpreadsheetId = localStorage.getItem('schoolSpreadsheetId');
+            authToken = localStorage.getItem('authToken');
+            await loadInitialAppData();
+            switchView('dashboard-view', 'Dashboard', 'nav-dashboard');
+        } else {
+            showLoginView();
+        }
+    }
+    
     function showPremiumView() { D.loginSection.style.display='none'; D.premiumInfoSection.style.display='block'; }
-    D.loginForm.addEventListener('submit', async (e) => { e.preventDefault(); hideMessage(D.loginMessage); const m = D.mobileInput.value.trim(), p = D.passwordInput.value.trim(); if (!m || !p) { showMessage(D.loginMessage, 'Mobile and password are required.', 'warning'); return; } D.loginButton.classList.add('processing'); D.loginButton.disabled = true; /* showLoading() is implicitly called by callBackendApi or direct fetch */ try { const res = await fetch('/login', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ mobile: m, password: p }) }); const r = await res.json(); /* hideLoading() implicitly done */ D.loginButton.classList.remove('processing'); D.loginButton.disabled = false; if (res.ok && r?.success && r.spreadsheetId) { schoolSpreadsheetId = r.spreadsheetId; localStorage.setItem('schoolSpreadsheetId', schoolSpreadsheetId); localStorage.setItem('userMobile', m); showAppView(); } else if (res.ok && r?.reason === 'not_premium') { showPremiumView(); } else { showMessage(D.loginMessage, r?.message || r?.error || 'Login failed. Check credentials.', 'error'); localStorage.removeItem('schoolSpreadsheetId'); localStorage.removeItem('userMobile'); } } catch (err) { /* hideLoading() implicitly done */ D.loginButton.classList.remove('processing'); D.loginButton.disabled = false; console.error("Login fetch error:", err); showMessage(D.loginMessage, `Login Error: ${err.message}`, 'error'); localStorage.removeItem('schoolSpreadsheetId'); localStorage.removeItem('userMobile'); } });
+    
+    D.loginForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        hideMessage(D.loginMessage);
+        const m = D.mobileInput.value.trim();
+        const p = D.passwordInput.value.trim();
+        if (!m || !p) { showMessage(D.loginMessage, 'Mobile and password are required.', 'warning'); return; }
+        
+        D.loginButton.classList.add('processing');
+        D.loginButton.disabled = true;
+
+        const result = await callBackendApi('login', { mobile: m, password: p });
+
+        D.loginButton.classList.remove('processing');
+        D.loginButton.disabled = false;
+
+        if (result?.success && result.spreadsheetId && result.token) {
+            schoolSpreadsheetId = result.spreadsheetId;
+            authToken = result.token;
+            localStorage.setItem('schoolSpreadsheetId', schoolSpreadsheetId);
+            localStorage.setItem('authToken', authToken);
+            localStorage.setItem('userMobile', m);
+            showAppView();
+        } else if (result?.reason === 'not_premium') {
+            showPremiumView();
+        } else {
+            showMessage(D.loginMessage, result?.message || result?.error || 'Login failed. Check credentials.', 'error');
+            localStorage.removeItem('schoolSpreadsheetId');
+            localStorage.removeItem('userMobile');
+            localStorage.removeItem('authToken');
+        }
+    });
+
     D.premiumBackBtn.addEventListener('click', () => { D.premiumInfoSection.style.display='none'; D.loginSection.style.display='block'; D.loginForm.reset(); hideMessage(D.loginMessage); });
     D.logoutBtn.addEventListener('click', () => { if(confirm("Are you sure you want to logout?")) showLoginView(); });
     function toggleSidebar() { D.sidebar.classList.toggle('collapsed'); }
@@ -1153,7 +1280,21 @@
     document.querySelectorAll('.close-btn, .cancel-btn[data-modal-id]').forEach(btn => { btn.addEventListener('click', () => closeModal(btn.dataset.modalId || btn.closest('.modal').id)); });
     window.addEventListener('click', (e)=>{ if(e.target.classList.contains('modal')) closeModal(e.target.id); });
     window.addEventListener('keydown', (e)=>{ if(e.key==='Escape'){ document.querySelectorAll('.modal').forEach(m=>closeModal(m.id)); if (D.fullscreenIframeContainer.style.display === 'flex') D.closeFullscreenIframeBtn.click(); } });
-    document.addEventListener('DOMContentLoaded', () => { const storedSpreadsheetId = localStorage.getItem('schoolSpreadsheetId'); if (storedSpreadsheetId) { schoolSpreadsheetId = storedSpreadsheetId; showAppView(); } else { showLoginView(); } const mt = D.sidebarToggleMobile; if (window.innerWidth <= 768) { mt.style.display = 'block'; D.sidebar.classList.add('collapsed'); } else { mt.style.display = 'none'; } });
+    
+    document.addEventListener('DOMContentLoaded', () => {
+        const storedSpreadsheetId = localStorage.getItem('schoolSpreadsheetId');
+        const storedToken = localStorage.getItem('authToken');
+        if (storedSpreadsheetId && storedToken) {
+            schoolSpreadsheetId = storedSpreadsheetId;
+            authToken = storedToken;
+            showAppView();
+        } else {
+            showLoginView();
+        }
+        const mt = D.sidebarToggleMobile; 
+        if (window.innerWidth <= 768) { mt.style.display = 'block'; D.sidebar.classList.add('collapsed'); } else { mt.style.display = 'none'; } 
+    });
+
     window.addEventListener('resize',()=>{const mt=D.sidebarToggleMobile; if(window.innerWidth<=768){mt.style.display='block';if(!D.sidebar.classList.contains('open'))D.sidebar.classList.add('collapsed');}else{mt.style.display='none';D.sidebar.classList.remove('open');D.sidebar.classList.remove('collapsed');}});
 
 </script>
