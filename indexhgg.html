@@ -481,7 +481,6 @@
                  <button id="download-pdf-btn" style="display: none;" title="Download Current View as PDF">
                      <i class="fas fa-file-pdf"></i> PDF
                  </button>
-                 <button id="download-all-data-btn" title="Download All Spreadsheet Data as JSON"><i class="fas fa-database"></i> All Data</button>
                 <span id="user-greeting"></span>
                  <button class="logout-button" id="logout-btn" title="Logout"><i class="fas fa-sign-out-alt"></i> Logout</button>
              </div>
@@ -706,7 +705,6 @@
          userGreeting: document.getElementById('user-greeting'), logoutBtn: document.getElementById('logout-btn'), 
          mainContent: document.getElementById('main-content'), viewSections: document.querySelectorAll('.view-section'), 
          downloadPdfBtn: document.getElementById('download-pdf-btn'),
-         downloadAllDataBtn: document.getElementById('download-all-data-btn'),
 
          dashboardView: document.getElementById('dashboard-view'), dashboardMessage: document.getElementById('dashboard-message'),
          dbTotalStudents: document.getElementById('db-total-students'), dbTotalStaff: document.getElementById('db-total-staff'),
@@ -1213,28 +1211,6 @@
     function updatePdfButtonVisibility(viewId) { D.downloadPdfBtn.style.display = 'none'; if (viewId === 'student-list-view') { const studentTableBody = document.getElementById('current-class-student-table-body'); if (studentTableBody && studentTableBody.rows.length > 0 && !studentTableBody.rows[0].cells[0].textContent.toLowerCase().includes('no students')) { D.downloadPdfBtn.style.display = 'inline-flex'; } } else if (viewId === 'generic-sheet-view' && D.genericTableBody.rows.length > 0 && !D.genericTableBody.rows[0].cells[0].textContent.toLowerCase().includes('empty')) { D.downloadPdfBtn.style.display = 'inline-flex'; } }
     D.downloadPdfBtn.addEventListener('click', downloadCurrentViewAsPDF);
     function downloadCurrentViewAsPDF() { let tableElement, headers = [], data = [], title = 'Data Export', orientation = 'p'; if (currentView === 'student-list-view') { const currentStudentTable = document.getElementById('current-class-student-table-body'); if(!currentStudentTable || currentClassStudents.length === 0) { showMessage(D.studentListMessage, "No data to export.", "warning"); return;} tableElement = currentStudentTable.closest('table'); const displayedClassName = D.studentListMainContent.querySelector('h3')?.textContent.replace(' - Student List','') || "Student List"; title = displayedClassName; headers = Array.from(tableElement.querySelectorAll('thead th')).map(th => th.textContent.trim()).slice(0, -1); data = currentClassStudents.map(s => [ s.PhotoURL ? 'Photo' : '-', s.RollNumber || '-', s.Name || '-', s.Mobile || '-', s.FatherName || '-' ]); if (headers.length > 4) orientation = 'l'; } else if (currentView === 'generic-sheet-view' && currentGenericSheetName && currentGenericData.length > 0) { tableElement = D.genericDataTable; title = `${currentGenericSheetName} Data`; headers = currentGenericHeaders; data = currentGenericData.map(rowItem => currentGenericHeaders.map((h, idx) => rowItem.values[idx] ?? '')); if (headers.length > 6) orientation = 'l'; } else { showMessage(D.dashboardMessage || D.mainHeaderTitle, "PDF not available.", 'warning'); return; } if (!tableElement || data.length === 0) { showMessage(D.mainHeaderTitle, "No data to download.", 'warning'); return; } try { showLoading(); const doc = new jsPDF({ orientation: orientation }); doc.setFontSize(16); doc.text(title, 14, 16); doc.setFontSize(8); doc.setTextColor(100); doc.text(`Generated on: ${new Date().toLocaleString()}`, 14, 20); jsPDF.autoTable(doc, { head: [headers], body: data, startY: 25, theme: 'grid', styles: { fontSize: orientation === 'l' ? 7 : 8, cellPadding: 1.5, overflow: 'linebreak' }, headStyles: { fillColor: [52, 152, 219], textColor: 255, fontStyle: 'bold' }, didDrawPage: function (data) { doc.setFontSize(8); doc.setTextColor(150); const pageCount=doc.internal.getNumberOfPages(); doc.text('Page '+doc.internal.getCurrentPageInfo().pageNumber+' of '+pageCount,data.settings.margin.left,doc.internal.pageSize.height-10); } }); doc.save(`${title.replace(/[^a-z0-9]/gi, '_').toLowerCase()}_${new Date().toISOString().slice(0,10)}.pdf`); hideLoading(); } catch (error) { console.error("Error PDF:", error); hideLoading(); showMessage(document.querySelector('.header-actions'), `PDF Error: ${error.message}`, 'error'); } }
-
-    D.downloadAllDataBtn.addEventListener('click', async () => {
-        if (!confirm("This will download all data from every sheet as a single JSON file. This may take a moment. Continue?")) {
-            return;
-        }
-        const result = await callBackendApi('completedata_fatch', {});
-        if (result?.success && result.data) {
-            const jsonStr = JSON.stringify(result.data, null, 2);
-            const blob = new Blob([jsonStr], { type: 'application/json' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = `school_complete_data_${new Date().toISOString().slice(0,10)}.json`;
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            URL.revokeObjectURL(url);
-            showMessage(D.dashboardMessage, 'Complete data JSON file has been downloaded.', 'success');
-        } else {
-            showMessage(D.dashboardMessage, result?.error || 'Failed to download complete data.', 'error');
-        }
-    });
 
     // --- Event Listeners & Initial Load ---
     document.querySelectorAll('.close-btn, .cancel-btn[data-modal-id]').forEach(btn => { btn.addEventListener('click', () => closeModal(btn.dataset.modalId || btn.closest('.modal').id)); });
