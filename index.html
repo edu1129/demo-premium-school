@@ -1,4 +1,4 @@
-```html
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -465,6 +465,7 @@
             <li id="nav-add-fees"><a data-view="add-fees-view"><i class="fas fa-file-invoice-dollar"></i><span class="menu-text">Add Fees</span></a></li>
             <li id="nav-add-result"><a data-view="add-results-view"><i class="fas fa-award"></i><span class="menu-text">Add Result</span></a></li>
             <li id="nav-tools"><a data-view="tools-view"><i class="fas fa-tools"></i><span class="menu-text">Tools Hub</span></a></li>
+            <li id="nav-complete-data"><a data-view="complete-data-view"><i class="fas fa-database"></i><span class="menu-text">Complete Data</span></a></li>
             <li class="sidebar-divider" id="generator-divider" style="display: none;"></li>
             <!-- Dynamic generators will be appended here -->
             <li class="sidebar-divider" id="sheet-divider" style="display: none;"></li>
@@ -481,7 +482,7 @@
                  <button id="download-pdf-btn" style="display: none;" title="Download Current View as PDF">
                      <i class="fas fa-file-pdf"></i> PDF
                  </button>
-                 <button id="download-all-data-btn" title="Download All Spreadsheet Data as JSON"><i class="fas fa-database"></i> All Data</button>
+
                 <span id="user-greeting"></span>
                  <button class="logout-button" id="logout-btn" title="Logout"><i class="fas fa-sign-out-alt"></i> Logout</button>
              </div>
@@ -706,7 +707,7 @@
          userGreeting: document.getElementById('user-greeting'), logoutBtn: document.getElementById('logout-btn'), 
          mainContent: document.getElementById('main-content'), viewSections: document.querySelectorAll('.view-section'), 
          downloadPdfBtn: document.getElementById('download-pdf-btn'),
-         downloadAllDataBtn: document.getElementById('download-all-data-btn'),
+
 
          dashboardView: document.getElementById('dashboard-view'), dashboardMessage: document.getElementById('dashboard-message'),
          dbTotalStudents: document.getElementById('db-total-students'), dbTotalStaff: document.getElementById('db-total-staff'),
@@ -775,7 +776,11 @@
         staffDetailsModal: document.getElementById('staffDetailsModal'), staffDetailsModalTitle: document.getElementById('staff-details-modal-title'),
         staffDetailsModalBody: document.getElementById('staff-details-modal-body'), staffDetailsModalFooter: document.getElementById('staff-details-modal-footer'),
         addSalaryMessage: document.getElementById('add-salary-message'), addSalaryPaymentBtnModal: document.getElementById('add-salary-payment-btn-modal')
-    };
+    };,
+
+        completeDataView: document.getElementById('complete-data-view'),
+        completeDataMessage: document.getElementById('complete-data-message'),
+        completeDataContainer: document.getElementById('complete-data-container')
 
     // --- Utility Functions ---
     const showLoading = () => D.loadingOverlay.classList.add('show');
@@ -887,6 +892,7 @@
             else if (viewId === 'add-fees-view') prepareAddFeesForm();
             else if (viewId === 'staff-list-view') loadStaffList();
             else if (viewId === 'add-results-view') { if(D.resultClassSelect.options.length <=1 && Object.keys(classMapping).length > 0) populateClassDropdowns(); showStep(1); }
+            else if (viewId === 'complete-data-view') loadAndDisplayCompleteData();
         } else console.error(`View "${viewId}" not found.`);
         updatePdfButtonVisibility(viewId);
         if (window.innerWidth <= 768 && D.sidebar.classList.contains('open')) D.sidebar.classList.remove('open');
@@ -1214,27 +1220,91 @@
     D.downloadPdfBtn.addEventListener('click', downloadCurrentViewAsPDF);
     function downloadCurrentViewAsPDF() { let tableElement, headers = [], data = [], title = 'Data Export', orientation = 'p'; if (currentView === 'student-list-view') { const currentStudentTable = document.getElementById('current-class-student-table-body'); if(!currentStudentTable || currentClassStudents.length === 0) { showMessage(D.studentListMessage, "No data to export.", "warning"); return;} tableElement = currentStudentTable.closest('table'); const displayedClassName = D.studentListMainContent.querySelector('h3')?.textContent.replace(' - Student List','') || "Student List"; title = displayedClassName; headers = Array.from(tableElement.querySelectorAll('thead th')).map(th => th.textContent.trim()).slice(0, -1); data = currentClassStudents.map(s => [ s.PhotoURL ? 'Photo' : '-', s.RollNumber || '-', s.Name || '-', s.Mobile || '-', s.FatherName || '-' ]); if (headers.length > 4) orientation = 'l'; } else if (currentView === 'generic-sheet-view' && currentGenericSheetName && currentGenericData.length > 0) { tableElement = D.genericDataTable; title = `${currentGenericSheetName} Data`; headers = currentGenericHeaders; data = currentGenericData.map(rowItem => currentGenericHeaders.map((h, idx) => rowItem.values[idx] ?? '')); if (headers.length > 6) orientation = 'l'; } else { showMessage(D.dashboardMessage || D.mainHeaderTitle, "PDF not available.", 'warning'); return; } if (!tableElement || data.length === 0) { showMessage(D.mainHeaderTitle, "No data to download.", 'warning'); return; } try { showLoading(); const doc = new jsPDF({ orientation: orientation }); doc.setFontSize(16); doc.text(title, 14, 16); doc.setFontSize(8); doc.setTextColor(100); doc.text(`Generated on: ${new Date().toLocaleString()}`, 14, 20); jsPDF.autoTable(doc, { head: [headers], body: data, startY: 25, theme: 'grid', styles: { fontSize: orientation === 'l' ? 7 : 8, cellPadding: 1.5, overflow: 'linebreak' }, headStyles: { fillColor: [52, 152, 219], textColor: 255, fontStyle: 'bold' }, didDrawPage: function (data) { doc.setFontSize(8); doc.setTextColor(150); const pageCount=doc.internal.getNumberOfPages(); doc.text('Page '+doc.internal.getCurrentPageInfo().pageNumber+' of '+pageCount,data.settings.margin.left,doc.internal.pageSize.height-10); } }); doc.save(`${title.replace(/[^a-z0-9]/gi, '_').toLowerCase()}_${new Date().toISOString().slice(0,10)}.pdf`); hideLoading(); } catch (error) { console.error("Error PDF:", error); hideLoading(); showMessage(document.querySelector('.header-actions'), `PDF Error: ${error.message}`, 'error'); } }
 
-    D.downloadAllDataBtn.addEventListener('click', async () => {
-        if (!confirm("This will download all data from every sheet as a single JSON file. This may take a moment. Continue?")) {
-            return;
-        }
+    async function loadAndDisplayCompleteData() {
+        showMessage(D.completeDataMessage, "Fetching all spreadsheet data. This may take a moment...", "info", false);
+        D.completeDataContainer.innerHTML = '';
+
         const result = await callBackendApi('completedata_fatch', {});
+
         if (result?.success && result.data) {
-            const jsonStr = JSON.stringify(result.data, null, 2);
-            const blob = new Blob([jsonStr], { type: 'application/json' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = `school_complete_data_${new Date().toISOString().slice(0,10)}.json`;
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            URL.revokeObjectURL(url);
-            showMessage(D.dashboardMessage, 'Complete data JSON file has been downloaded.', 'success');
+            hideMessage(D.completeDataMessage);
+            const allSheetData = result.data;
+            const container = D.completeDataContainer;
+            const sheetNames = Object.keys(allSheetData).sort();
+
+            if (sheetNames.length === 0) {
+                showMessage(D.completeDataMessage, "The spreadsheet is empty or no data was found.", "info");
+                return;
+            }
+
+            const frag = document.createDocumentFragment();
+
+            sheetNames.forEach(sheetName => {
+                const sheetData = allSheetData[sheetName];
+                
+                const sheetContainer = document.createElement('div');
+                sheetContainer.style.marginBottom = '40px';
+
+                const title = document.createElement('h3');
+                title.textContent = sheetName;
+                title.style.paddingBottom = '10px';
+                title.style.borderBottom = '2px solid var(--primary-color)';
+                title.style.marginBottom = '15px';
+                title.style.color = 'var(--primary-color)';
+                sheetContainer.appendChild(title);
+
+                if (Array.isArray(sheetData) && sheetData.length > 0) {
+                    const tableContainer = document.createElement('div');
+                    tableContainer.className = 'data-table-container';
+                    tableContainer.style.maxHeight = '50vh'; // Each table can scroll
+
+                    const table = document.createElement('table');
+                    table.className = 'data-table';
+
+                    const thead = document.createElement('thead');
+                    const headerRow = document.createElement('tr');
+                    const headers = Object.keys(sheetData[0]);
+                    headers.forEach(headerText => {
+                        const th = document.createElement('th');
+                        th.textContent = sanitizeHTML(headerText);
+                        headerRow.appendChild(th);
+                    });
+                    thead.appendChild(headerRow);
+                    table.appendChild(thead);
+
+                    const tbody = document.createElement('tbody');
+                    sheetData.forEach(rowData => {
+                        const tr = document.createElement('tr');
+                        headers.forEach(header => {
+                            const td = document.createElement('td');
+                            td.textContent = sanitizeHTML(rowData[header]);
+                            tr.appendChild(td);
+                        });
+                        tbody.appendChild(tr);
+                    });
+                    table.appendChild(tbody);
+                    tableContainer.appendChild(table);
+                    sheetContainer.appendChild(tableContainer);
+
+                } else if (sheetData.error) {
+                     const errorMsg = document.createElement('p');
+                     errorMsg.className = 'message error';
+                     errorMsg.textContent = `Error loading this sheet: ${sheetData.error}`;
+                     sheetContainer.appendChild(errorMsg);
+                } else {
+                    const emptyMsg = document.createElement('p');
+                    emptyMsg.className = 'message info';
+                    emptyMsg.textContent = 'This sheet is empty.';
+                    sheetContainer.appendChild(emptyMsg);
+                }
+                frag.appendChild(sheetContainer);
+            });
+            container.appendChild(frag);
+
         } else {
-            showMessage(D.dashboardMessage, result?.error || 'Failed to download complete data.', 'error');
+            showMessage(D.completeDataMessage, result?.error || 'Failed to fetch complete data.', 'error');
         }
-    });
+    }
 
     // --- Event Listeners & Initial Load ---
     document.querySelectorAll('.close-btn, .cancel-btn[data-modal-id]').forEach(btn => { btn.addEventListener('click', () => closeModal(btn.dataset.modalId || btn.closest('.modal').id)); });
