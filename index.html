@@ -683,6 +683,7 @@
 
 <script>
     // --- State Variables ---
+    const SCRIPT_URL = 'PASTE_YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL_HERE'; // <-- IMPORTANT
     let schoolSpreadsheetId = null;
     let authToken = null;
     let studentsData = []; 
@@ -807,7 +808,9 @@
     // --- API Call Function ---
     async function callBackendApi(action, payload = {}) {
         showLoading();
-        const endpoint = `/api/${action}`;
+        
+        // The payload must include the action for the backend to route it.
+        payload.action = action;
 
         if (action !== 'login') {
             if (schoolSpreadsheetId) payload.spreadsheetId = schoolSpreadsheetId;
@@ -815,23 +818,33 @@
         }
 
         try {
-            const res = await fetch(endpoint, {
+            // A more helpful error message for the most common issue.
+            if (SCRIPT_URL.includes('PASTE_YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL_HERE')) {
+                const errorMsg = "Configuration Error: The Google Apps Script URL is not set. Please edit index.html and set the SCRIPT_URL variable.";
+                hideLoading();
+                showMessage(D.loginMessage, errorMsg, 'error', false);
+                return { success: false, error: errorMsg };
+            }
+
+            // All requests go to the single Google Apps Script URL.
+            const res = await fetch(SCRIPT_URL, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(payload)
             });
 
+            // Since Apps Script doPost can return different content types, we parse as JSON.
             const result = await res.json();
             hideLoading();
             
             // Check for authentication specific message from backend
-            if (result.success === false && result.message && result.message.toLowerCase().includes('token')) {
+            if (result.success === false && result.message && (result.message.toLowerCase().includes('token') || result.message.toLowerCase().includes('session'))) {
                 showMessage(D.loginMessage, `Session expired or invalid. Please log in again. (${result.message})`, 'error');
                 showLoginView();
                 return { success: false, error: "Authentication failed." };
             }
             if (!res.ok) {
-                 throw new Error(result.error || result.message || `HTTP ${res.status}`);
+                 throw new Error(result.error || result.message || `HTTP error ${res.status}`);
             }
 
             return result;
@@ -854,7 +867,7 @@
                  showMessage(msgEl || D.loginMessage, `Connection or session error. Please log in again.`, 'error');
                  showLoginView(); 
              } else {
-                 showMessage(msgEl || D.loginMessage, `Network/Server Error: ${err.message}`, 'error');
+                 showMessage(msgEl || D.loginMessage, `Network/Server Error: ${err.message}. Check browser console and Apps Script logs for details.`, 'error');
              }
 
             return { success: false, error: err.message };
@@ -877,7 +890,45 @@
         switchView('dashboard-view', 'Dashboard', 'nav-dashboard');
     }
     function showPremiumView() { D.loginSection.style.display='none'; D.premiumInfoSection.style.display='block'; }
-    D.loginForm.addEventListener('submit', async (e) => { e.preventDefault(); hideMessage(D.loginMessage); const m = D.mobileInput.value.trim(), p = D.passwordInput.value.trim(); if (!m || !p) { showMessage(D.loginMessage, 'Mobile and password are required.', 'warning'); return; } D.loginButton.classList.add('processing'); D.loginButton.disabled = true; try { const res = await fetch('/login', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ mobile: m, password: p }) }); const r = await res.json(); D.loginButton.classList.remove('processing'); D.loginButton.disabled = false; if (res.ok && r?.success && r.spreadsheetId && r.token) { schoolSpreadsheetId = r.spreadsheetId; authToken = r.token; localStorage.setItem('schoolSpreadsheetId', schoolSpreadsheetId); localStorage.setItem('authToken', authToken); localStorage.setItem('userMobile', m); await showAppView(); } else if (res.ok && r?.reason === 'not_premium') { showPremiumView(); } else { showMessage(D.loginMessage, r?.message || r?.error || 'Login failed. Check credentials.', 'error'); localStorage.clear(); } } catch (err) { D.loginButton.classList.remove('processing'); D.loginButton.disabled = false; console.error("Login fetch error:", err); showMessage(D.loginMessage, `Login Error: ${err.message}`, 'error'); localStorage.clear(); } });
+    D.loginForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        hideMessage(D.loginMessage);
+        const m = D.mobileInput.value.trim();
+        const p = D.passwordInput.value.trim();
+        if (!m || !p) {
+            showMessage(D.loginMessage, 'Mobile and password are required.', 'warning');
+            return;
+        }
+        D.loginButton.classList.add('processing');
+        D.loginButton.disabled = true;
+
+        try {
+            const r = await callBackendApi('login', { mobile: m, password: p });
+            
+            D.loginButton.classList.remove('processing');
+            D.loginButton.disabled = false;
+
+            if (r?.success && r.spreadsheetId && r.token) {
+                schoolSpreadsheetId = r.spreadsheetId;
+                authToken = r.token;
+                localStorage.setItem('schoolSpreadsheetId', schoolSpreadsheetId);
+                localStorage.setItem('authToken', authToken);
+                localStorage.setItem('userMobile', m);
+                await showAppView();
+            } else if (r?.reason === 'not_premium') {
+                showPremiumView();
+            } else {
+                showMessage(D.loginMessage, r?.message || r?.error || 'Login failed. Check credentials.', 'error');
+                localStorage.clear();
+            }
+        } catch (err) {
+            // callBackendApi already handles showing the error message
+            D.loginButton.classList.remove('processing');
+            D.loginButton.disabled = false;
+            console.error("Login processing error:", err);
+            localStorage.clear();
+        }
+    });
     D.premiumBackBtn.addEventListener('click', () => { D.premiumInfoSection.style.display='none'; D.loginSection.style.display='block'; D.loginForm.reset(); hideMessage(D.loginMessage); });
     D.logoutBtn.addEventListener('click', () => { if(confirm("Are you sure you want to logout?")) showLoginView(); });
     function toggleSidebar() { D.sidebar.classList.toggle('collapsed'); }
