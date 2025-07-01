@@ -482,7 +482,7 @@
                  <button id="download-pdf-btn" style="display: none;" title="Download Current View as PDF">
                      <i class="fas fa-file-pdf"></i> PDF
                  </button>
-                 <button id="view-all-data-btn" title="View All Spreadsheet Data"><i class="fas fa-table"></i> All Data</button>
+                 <button id="view-all-data-btn" title="View All Spreadsheet Data" style="display: none;"><i class="fas fa-table"></i> All Data</button>
                 <span id="user-greeting"></span>
                  <button class="logout-button" id="logout-btn" title="Logout"><i class="fas fa-sign-out-alt"></i> Logout</button>
              </div>
@@ -629,7 +629,7 @@
                      <div class="title-text"><i class="fas fa-table"></i> Complete Data View</div>
                  </div>
                  <div class="section-content" id="complete-data-content">
-                    <p class="message info">Click the "All Data" button in the header to load all data.</p>
+                    <p class="message info">Click the "All Data" menu item to load all data.</p>
                  </div>
             </section>
 
@@ -683,7 +683,6 @@
 
 <script>
     // --- State Variables ---
-    const SCRIPT_URL = 'PASTE_YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL_HERE'; // <-- IMPORTANT
     let schoolSpreadsheetId = null;
     let authToken = null;
     let studentsData = []; 
@@ -731,7 +730,8 @@
          duesPerClassChartEl: document.getElementById('duesPerClassChart'),
          attendancePerClassChartEl: document.getElementById('attendancePerClassChart'),
 
-         completeDataView: document.getElementById('complete-data-view'), completeDataContent: document.getElementById('complete-data-content'),
+         completeDataView: document.getElementById('complete-data-view'),
+         completeDataContent: document.getElementById('complete-data-content'),
          studentListView: document.getElementById('student-list-view'), 
          studentListMessage: document.getElementById('student-list-message'),
          studentListMainContent: document.getElementById('student-list-main-content'),
@@ -950,6 +950,7 @@
             else if (viewId === 'add-fees-view') prepareAddFeesForm();
             else if (viewId === 'staff-list-view') loadStaffList();
             else if (viewId === 'add-results-view') { if(D.resultClassSelect.options.length <=1 && Object.keys(classMapping).length > 0) populateClassDropdowns(); showStep(1); }
+            else if (viewId === 'complete-data-view') { D.viewAllDataBtn.click(); }
         } else console.error(`View "${viewId}" not found.`);
         updatePdfButtonVisibility(viewId);
         if (window.innerWidth <= 768 && D.sidebar.classList.contains('open')) D.sidebar.classList.remove('open');
@@ -1301,6 +1302,12 @@
                 title.style.borderBottom = '2px solid #eee';
                 sheetContainer.appendChild(title);
 
+                if (sheetData.error) {
+                    sheetContainer.innerHTML += `<p class="message error">Could not load this sheet: ${sanitizeHTML(sheetData.error)}</p>`;
+                    frag.appendChild(sheetContainer);
+                    continue;
+                }
+
                 if (!Array.isArray(sheetData) || sheetData.length === 0) {
                     sheetContainer.innerHTML += '<p class="message info">This sheet is empty or contains only headers.</p>';
                     frag.appendChild(sheetContainer);
@@ -1345,15 +1352,21 @@
 
         D.viewAllDataBtn.addEventListener('click', async () => {
             if (!confirm("This will fetch all data from every sheet and display it. This may take a moment. Continue?")) {
+                if (currentView === 'complete-data-view') {
+                    // If they cancel, don't show a blank screen, show the placeholder text.
+                    D.completeDataContent.innerHTML = '<p class="message info">Click the "All Data" menu item to load all data.</p>';
+                }
                 return;
             }
+            // Switch view immediately to give user feedback
+            switchView('complete-data-view', 'Complete Data View', 'nav-all-data');
+            D.completeDataContent.innerHTML = '<p class="message info">Fetching all data from the spreadsheet... This may take a moment.</p>';
+
             const result = await callBackendApi('completedata_fatch', {});
             if (result?.success && result.data) {
                 displayAllData(result.data);
-                switchView('complete-data-view', 'Complete Data View', 'nav-all-data');
             } else {
                 D.completeDataContent.innerHTML = `<p class="message error">${result?.error || 'Failed to fetch complete data.'}</p>`;
-                switchView('complete-data-view', 'Complete Data View', 'nav-all-data');
             }
         });
 
@@ -1385,3 +1398,4 @@
 
 </body>
 </html>
+
