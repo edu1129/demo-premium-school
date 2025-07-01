@@ -621,6 +621,20 @@
                 </div>
             </section>
 
+            <!-- Complete Data View -->
+            <section id="complete-data-view" class="view-section">
+                <div class="view-header">
+                    <div class="title-text"><i class="fas fa-database"></i> Complete Spreadsheet Data</div>
+                </div>
+                <div class="section-content">
+                    <div id="complete-data-message" class="message info" style="display: none;"></div>
+                    <div id="complete-data-container">
+                        <p class="message info">Click the "Fetch Data" button to load all data from your spreadsheet. This can take a moment.</p>
+                        <button id="fetch-complete-data-btn" class="modal-footer save-btn" style="margin-top: 20px;"><i class="fas fa-sync-alt"></i> Fetch Data</button>
+                    </div>
+                </div>
+            </section>
+
             <!-- Generic Sheet View -->
             <section id="generic-sheet-view" class="view-section">
                  <div class="view-header">
@@ -1236,6 +1250,87 @@
     });
     window.addEventListener('resize',()=>{const mt=D.sidebarToggleMobile; if(window.innerWidth<=768){mt.style.display='block';if(!D.sidebar.classList.contains('open'))D.sidebar.classList.add('collapsed');}else{mt.style.display='none';D.sidebar.classList.remove('open');D.sidebar.classList.remove('collapsed');}});
 
+    async function fetchAndDisplayCompleteData() {
+        showMessage(D.completeDataMessage, 'Fetching all data, this may take a moment...', 'info');
+        D.completeDataContainer.innerHTML = ''; // Clear previous content
+        const result = await callBackendApi('completedata_fatch', {});
+
+        if (result?.success && result.data) {
+            hideMessage(D.completeDataMessage);
+            const allData = result.data;
+            const container = D.completeDataContainer;
+            
+            if (Object.keys(allData).length === 0) {
+                container.innerHTML = '<p class="message warning">No data or sheets found in the spreadsheet.</p>';
+                return;
+            }
+
+            const frag = document.createDocumentFragment();
+
+            for (const sheetName in allData) {
+                const sheetData = allData[sheetName];
+                
+                const sheetHeader = document.createElement('h3');
+                sheetHeader.textContent = sanitizeHTML(sheetName);
+                sheetHeader.style.cssText = "margin-top: 30px; margin-bottom: 15px; padding-bottom: 10px; border-bottom: 2px solid var(--primary-color); color: var(--primary-color);";
+                frag.appendChild(sheetHeader);
+
+                if (Array.isArray(sheetData) && sheetData.length > 0) {
+                    const tableContainer = document.createElement('div');
+                    tableContainer.className = 'data-table-container';
+                    tableContainer.style.maxHeight = '50vh';
+
+                    const table = document.createElement('table');
+                    table.className = 'data-table';
+                    
+                    const thead = document.createElement('thead');
+                    const headerRow = document.createElement('tr');
+                    const headers = Object.keys(sheetData[0]);
+                    headers.forEach(headerText => {
+                        const th = document.createElement('th');
+                        th.textContent = sanitizeHTML(headerText);
+                        headerRow.appendChild(th);
+                    });
+                    thead.appendChild(headerRow);
+                    table.appendChild(thead);
+
+                    const tbody = document.createElement('tbody');
+                    sheetData.forEach(row => {
+                        const tr = document.createElement('tr');
+                        headers.forEach(header => {
+                            const td = document.createElement('td');
+                            td.textContent = sanitizeHTML(row[header]);
+                            tr.appendChild(td);
+                        });
+                        tbody.appendChild(tr);
+                    });
+                    table.appendChild(tbody);
+                    tableContainer.appendChild(table);
+                    frag.appendChild(tableContainer);
+                } else if (sheetData.error) {
+                     const errorP = document.createElement('p');
+                     errorP.className = 'message error';
+                     errorP.textContent = `Error loading ${sheetName}: ${sheetData.error}`;
+                     frag.appendChild(errorP);
+                } else {
+                    const noDataP = document.createElement('p');
+                    noDataP.className = 'message info';
+                    noDataP.textContent = `Sheet \"${sheetName}\" is empty or contains only headers.`;
+                    frag.appendChild(noDataP);
+                }
+            }
+            container.appendChild(frag);
+
+        } else {
+            showMessage(D.completeDataMessage, result?.error || 'Failed to fetch complete data.', 'error');
+        }
+    }
+
+    D.completeDataView.addEventListener('click', (e) => {
+        if (e.target && e.target.id === 'fetch-complete-data-btn') {
+            fetchAndDisplayCompleteData();
+        }
+    });
 </script>
 
 </body>
