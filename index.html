@@ -464,6 +464,11 @@
             <li id="nav-staff"><a data-view="staff-list-view"><i class="fas fa-users-cog"></i><span class="menu-text">Staff</span></a></li>
             <li id="nav-add-fees"><a data-view="add-fees-view"><i class="fas fa-file-invoice-dollar"></i><span class="menu-text">Add Fees</span></a></li>
             <li id="nav-add-result"><a data-view="add-results-view"><i class="fas fa-award"></i><span class="menu-text">Add Result</span></a></li>
+            <li id="nav-add-student"><a data-modal-id="addStudentModal"><i class="fas fa-user-plus"></i><span class="menu-text">Add Student</span></a></li>
+            <li id="nav-add-staff"><a data-modal-id="addStaffModal"><i class="fas fa-user-tie"></i><span class="menu-text">Add Staff</span></a></li>
+            <li id="nav-add-class"><a data-modal-id="addClassModal"><i class="fas fa-chalkboard"></i><span class="menu-text">Add Class</span></a></li>
+            <li id="nav-add-subject"><a data-modal-id="addSubjectModal"><i class="fas fa-book"></i><span class="menu-text">Add Subject</span></a></li>
+            <li id="nav-assign-teacher"><a data-modal-id="assignClassTeacherModal"><i class="fas fa-chalkboard-teacher"></i><span class="menu-text">Assigned class</span></a></li>
             <li id="nav-tools"><a data-view="tools-view"><i class="fas fa-tools"></i><span class="menu-text">Tools Hub</span></a></li>
             <li class="sidebar-divider" id="generator-divider" style="display: none;"></li>
             <!-- Dynamic generators will be appended here -->
@@ -617,33 +622,7 @@
                 <div class="view-header"><div class="title-text"><i class="fas fa-tools"></i> Tools Hub</div></div>
                 <div class="section-content">
                     <div id="tools-message" class="message info" style="display: none;"></div>
-                    <div id="tools-view-content">
-                        <div class="tool-card" data-modal-id="addStudentModal">
-                            <img src="https://img.icons8.com/color/96/000000/add-user-male.png" alt="Add Student">
-                            <h4>Add Student</h4>
-                            <p>Add a new student record to the system.</p>
-                        </div>
-                        <div class="tool-card" data-modal-id="addStaffModal">
-                            <img src="https://img.icons8.com/color/96/000000/add-user-group-man-man.png" alt="Add Staff">
-                            <h4>Add Staff</h4>
-                            <p>Add a new staff or teacher record.</p>
-                        </div>
-                        <div class="tool-card" data-modal-id="addClassModal">
-                            <img src="https://img.icons8.com/color/96/000000/classroom.png" alt="Add Class">
-                            <h4>Add Class</h4>
-                            <p>Create a new class or section.</p>
-                        </div>
-                        <div class="tool-card" data-modal-id="addSubjectModal">
-                            <img src="https://img.icons8.com/color/96/000000/book.png" alt="Add Subject">
-                            <h4>Add Subject</h4>
-                            <p>Add a new subject to the curriculum.</p>
-                        </div>
-                        <div class="tool-card" data-modal-id="assignClassTeacherModal">
-                            <img src="https://img.icons8.com/color/96/000000/teacher.png" alt="Assign Teacher">
-                            <h4>Assign Class Teacher</h4>
-                            <p>Assign a staff member as a class teacher.</p>
-                        </div>
-                    </div>
+                    <div id="tools-view-content"><p class="message info">Loading tools...</p></div>
                 </div>
             </section>
 
@@ -708,6 +687,20 @@
 <!-- Staff Details Modal -->
 <div id="staffDetailsModal" class="modal"><div class="modal-content modal-xl"><div class="modal-header"><h3 id="staff-details-modal-title"><i class="fas fa-user-tie"></i> Staff Details</h3><button class="close-btn" data-modal-id="staffDetailsModal">×</button></div><div class="modal-body" id="staff-details-modal-body"><p class="message info">Loading staff details...</p></div><div class="modal-footer" id="staff-details-modal-footer"><div id="add-salary-message" class="message" style="display:none;"></div><button type="button" class="cancel-btn" data-modal-id="staffDetailsModal"><i class="fas fa-times"></i> Close</button><button type="button" class="save-btn" id="add-salary-payment-btn-modal" style="display:none;"><i class="fas fa-money-check-alt"></i> Save Payment</button></div></div></div>
 
+<!-- Add Student Modal -->
+<div id="addStudentModal" class="modal"><div class="modal-content modal-lg"><div class="modal-header"><h3><i class="fas fa-user-plus"></i> Add New Student</h3><button class="close-btn" data-modal-id="addStudentModal">×</button></div><div class="modal-body"><form id="add-student-form" novalidate><div class="form-grid"><div class="input-group"><label for="add-student-roll">Roll Number:</label><input type="text" id="add-student-roll" required></div><div class="input-group"><label for="add-student-name">Name:</label><input type="text" id="add-student-name" required></div><div class="input-group"><label for="add-student-class">Class:</label><select id="add-student-class" required><option value="" disabled selected>-- Select Class --</option></select></div><div class="input-group"><label for="add-student-mobile">Mobile:</label><input type="tel" id="add-student-mobile"></div><div class="input-group"><label for="add-student-gmail">Gmail:</label><input type="email" id="add-student-gmail"></div><div class="input-group"><label for="add-student-password">Password:</label><input type="text" id="add-student-password" required></div><div class="input-group"><label for="add-student-father">Father's Name:</label><input type="text" id="add-student-father"></div><div class="input-group"><label for="add-student-mother">Mother's Name:</label><input type="text" id="add-student-mother"></div><div class="input-group"><label for="add-student-address">Address:</label><input type="text" id="add-student-address"></div><div class="input-group"><label for="add-student-aadhar">Aadhar Number:</label><input type="text" id="add-student-aadhar"></div><div class="input-group"><label for="add-student-gender">Gender:</label><select id="add-student-gender"><option value="Male">Male</option><option value="Female">Female</option><option value="Other">Other</option></select></div><div class="input-group"><label for="add-student-photo">Photo:</label><input type="file" id="add-student-photo" accept="image/*"></div></div></form></div><div class="modal-footer"><div id="add-student-message" class="message" style="display:none;"></div><button type="button" class="cancel-btn" data-modal-id="addStudentModal"><i class="fas fa-times"></i> Cancel</button><button type="submit" form="add-student-form" class="save-btn"><i class="fas fa-save"></i> Save Student</button></div></div></div>
+
+<!-- Add Staff Modal -->
+<div id="addStaffModal" class="modal"><div class="modal-content"><div class="modal-header"><h3><i class="fas fa-user-tie"></i> Add New Staff</h3><button class="close-btn" data-modal-id="addStaffModal">×</button></div><div class="modal-body"><form id="add-staff-form" novalidate><div class="form-grid"><div class="input-group"><label for="add-staff-name">Name:</label><input type="text" id="add-staff-name" required></div><div class="input-group"><label for="add-staff-mobile">Mobile:</label><input type="tel" id="add-staff-mobile"></div><div class="input-group"><label for="add-staff-gmail">Gmail:</label><input type="email" id="add-staff-gmail"></div><div class="input-group"><label for="add-staff-password">Password:</label><input type="text" id="add-staff-password" required></div><div class="input-group"><label for="add-staff-salary">Salary Amount:</label><input type="number" id="add-staff-salary"></div><div class="input-group"><label for="add-staff-photo">Photo:</label><input type="file" id="add-staff-photo" accept="image/*"></div></div></form></div><div class="modal-footer"><div id="add-staff-message" class="message" style="display:none;"></div><button type="button" class="cancel-btn" data-modal-id="addStaffModal"><i class="fas fa-times"></i> Cancel</button><button type="submit" form="add-staff-form" class="save-btn"><i class="fas fa-save"></i> Save Staff</button></div></div></div>
+
+<!-- Add Class Modal -->
+<div id="addClassModal" class="modal"><div class="modal-content" style="max-width: 500px;"><div class="modal-header"><h3><i class="fas fa-chalkboard"></i> Add New Class</h3><button class="close-btn" data-modal-id="addClassModal">×</button></div><div class="modal-body"><form id="add-class-form" novalidate><div class="input-group"><label for="add-class-name">Class Name (e.g., 10th, 12th):</label><input type="text" id="add-class-name" required></div><div class="input-group"><label for="add-class-section">Section (e.g., A, B):</label><input type="text" id="add-class-section" required></div></form></div><div class="modal-footer"><div id="add-class-message" class="message" style="display:none;"></div><button type="button" class="cancel-btn" data-modal-id="addClassModal"><i class="fas fa-times"></i> Cancel</button><button type="submit" form="add-class-form" class="save-btn"><i class="fas fa-save"></i> Save Class</button></div></div></div>
+
+<!-- Add Subject Modal -->
+<div id="addSubjectModal" class="modal"><div class="modal-content" style="max-width: 500px;"><div class="modal-header"><h3><i class="fas fa-book"></i> Add New Subject</h3><button class="close-btn" data-modal-id="addSubjectModal">×</button></div><div class="modal-body"><form id="add-subject-form" novalidate><div class="input-group"><label for="add-subject-name">Subject Name (e.g., Maths, Science):</label><input type="text" id="add-subject-name" required></div></form></div><div class="modal-footer"><div id="add-subject-message" class="message" style="display:none;"></div><button type="button" class="cancel-btn" data-modal-id="addSubjectModal"><i class="fas fa-times"></i> Cancel</button><button type="submit" form="add-subject-form" class="save-btn"><i class="fas fa-save"></i> Save Subject</button></div></div></div>
+
+<!-- Assign Class Teacher Modal -->
+<div id="assignClassTeacherModal" class="modal"><div class="modal-content" style="max-width: 500px;"><div class="modal-header"><h3><i class="fas fa-chalkboard-teacher"></i> Assign Class Teacher</h3><button class="close-btn" data-modal-id="assignClassTeacherModal">×</button></div><div class="modal-body"><form id="assign-class-teacher-form" novalidate><div class="input-group"><label for="assign-teacher-class">Select Class:</label><select id="assign-teacher-class" required><option value="" disabled selected>-- Select Class --</option></select></div><div class="input-group"><label for="assign-teacher-staff">Select Staff (Teacher):</label><select id="assign-teacher-staff" required><option value="" disabled selected>-- Select Staff --</option></select></div></form></div><div class="modal-footer"><div id="assign-class-teacher-message" class="message" style="display:none;"></div><button type="button" class="cancel-btn" data-modal-id="assignClassTeacherModal"><i class="fas fa-times"></i> Cancel</button><button type="submit" form="assign-class-teacher-form" class="save-btn"><i class="fas fa-save"></i> Assign Teacher</button></div></div></div>
 
 <script>
     // --- State Variables ---
@@ -951,6 +944,18 @@
             }
         }
     });
+
+        const modalId = link.dataset.modalId;
+        if (modalId) {
+            e.preventDefault();
+            if (modalId === 'addStudentModal') {
+                populateAddStudentClassDropdown();
+            } else if (modalId === 'assignClassTeacherModal') {
+                if (!staffListData || staffListData.length === 0) await loadStaffList();
+                populateAssignTeacherDropdowns();
+            }
+            openModal(modalId);
+        }
 
     async function loadInitialAppData() { 
         if (!schoolSpreadsheetId || !authToken) { console.error("Missing Spreadsheet ID or Auth Token."); showLoginView(); return; }
@@ -1244,6 +1249,261 @@
     }
     D.addSalaryPaymentBtnModal.addEventListener('click', async () => { hideMessage(D.addSalaryMessage); const form = document.getElementById('add-salary-form-modal'); if (!form) return; const staffId = form.dataset.staffId; const payload = { staffId: staffId, paymentDate: document.getElementById('modal-salary-payment-date').value, amount: document.getElementById('modal-salary-amount').value, monthYear: document.getElementById('modal-salary-monthyear').value.trim(), notes: document.getElementById('modal-salary-notes').value.trim() }; if (!payload.staffId || !payload.paymentDate || !payload.amount || !payload.monthYear) { showMessage(D.addSalaryMessage, "Date, Amount, and Month/Year required.", "error"); return; } if (parseFloat(payload.amount) <=0) { showMessage(D.addSalaryMessage, "Amount must be > 0.", "error"); return; } const result = await callBackendApi('addStaffSalaryPayment', payload); if (result?.success) { showMessage(D.addSalaryMessage, result.message || "Payment added!", "success"); openStaffDetailsModal(staffId); loadStaffList(); } else { showMessage(D.addSalaryMessage, result?.error || "Failed to add payment.", "error"); } });
 
+    // --- New Feature Handlers (Add Student, Staff, etc.) ---
+
+    async function uploadPhotoToGitHub(file) {
+        if (!file) return null;
+        const GITHUB_TOKEN = "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";
+        const GITHUB_USER = "edu1129";
+        const GITHUB_REPO = "Hhhhh";
+        const fileName = `photos/${new Date().getTime()}-${file.name.replace(/[^a-zA-Z0-9._-]/g, '')}`;
+        const apiUrl = `https://api.github.com/repos/${GITHUB_USER}/${GITHUB_REPO}/contents/${fileName}`;
+
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onload = async () => {
+                const base64Content = reader.result.split(',')[1];
+                try {
+                    const response = await fetch(apiUrl, {
+                        method: 'PUT',
+                        headers: {
+                            'Authorization': `token ${GITHUB_TOKEN}`,
+                            'Accept': 'application/vnd.github.v3+json',
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            message: `Upload photo: ${file.name}`,
+                            content: base64Content
+                        })
+                    });
+                    const data = await response.json();
+                    if (response.ok && data.content && data.content.download_url) {
+                        resolve(data.content.download_url);
+                    } else {
+                        console.error('GitHub API Error:', data);
+                        reject(new Error(data.message || 'GitHub API error during photo upload.'));
+                    }
+                } catch (error) {
+                    console.error('Fetch Error during photo upload:', error);
+                    reject(error);
+                }
+            };
+            reader.onerror = error => reject(error);
+            reader.readAsDataURL(file);
+        });
+    }
+
+    document.getElementById('add-student-form').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const msgEl = document.getElementById('add-student-message');
+        hideMessage(msgEl);
+        const photoFile = document.getElementById('add-student-photo').files[0];
+        const saveBtn = e.target.querySelector('.save-btn');
+        saveBtn.disabled = true;
+        saveBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving...';
+
+        try {
+            let photoUrl = null;
+            if (photoFile) {
+                showMessage(msgEl, 'Uploading photo to GitHub...', 'info', false);
+                photoUrl = await uploadPhotoToGitHub(photoFile);
+                showMessage(msgEl, 'Photo uploaded. Saving student data...', 'info', false);
+            }
+
+            const studentData = {
+                RollNumber: document.getElementById('add-student-roll').value.trim(),
+                Name: document.getElementById('add-student-name').value.trim(),
+                Mobile: document.getElementById('add-student-mobile').value.trim(),
+                Gmail: document.getElementById('add-student-gmail').value.trim(),
+                Password: document.getElementById('add-student-password').value.trim(),
+                FatherName: document.getElementById('add-student-father').value.trim(),
+                MotherName: document.getElementById('add-student-mother').value.trim(),
+                Class: document.getElementById('add-student-class').value,
+                Address: document.getElementById('add-student-address').value.trim(),
+                PhotoURL: photoUrl,
+                Aadhar: document.getElementById('add-student-aadhar').value.trim(),
+                Gender: document.getElementById('add-student-gender').value
+            };
+
+            if (!studentData.RollNumber || !studentData.Name || !studentData.Class || !studentData.Password) {
+                throw new Error('Roll Number, Name, Class, and Password are required.');
+            }
+
+            const result = await callBackendApi('addStudent', { studentData });
+            if (result.success) {
+                showMessage(msgEl, result.message || 'Student added successfully!', 'success');
+                await loadStudentsAndClasses(false); // Refresh data
+                setTimeout(() => {
+                    closeModal('addStudentModal');
+                    document.getElementById('add-student-form').reset();
+                }, 2000);
+            } else {
+                throw new Error(result.error || 'Failed to add student.');
+            }
+        } catch (error) {
+            showMessage(msgEl, error.message, 'error', false);
+        } finally {
+            saveBtn.disabled = false;
+            saveBtn.innerHTML = '<i class="fas fa-save"></i> Save Student';
+        }
+    });
+
+    document.getElementById('add-staff-form').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const msgEl = document.getElementById('add-staff-message');
+        hideMessage(msgEl);
+        const photoFile = document.getElementById('add-staff-photo').files[0];
+        const saveBtn = e.target.querySelector('.save-btn');
+        saveBtn.disabled = true;
+        saveBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving...';
+
+        try {
+            let photoUrl = null;
+            if (photoFile) {
+                showMessage(msgEl, 'Uploading photo...', 'info', false);
+                photoUrl = await uploadPhotoToGitHub(photoFile);
+                showMessage(msgEl, 'Photo uploaded. Saving staff data...', 'info', false);
+            }
+
+            const staffData = {
+                Name: document.getElementById('add-staff-name').value.trim(),
+                Mobile: document.getElementById('add-staff-mobile').value.trim(),
+                Gmail: document.getElementById('add-staff-gmail').value.trim(),
+                Password: document.getElementById('add-staff-password').value.trim(),
+                SalaryAmount: document.getElementById('add-staff-salary').value.trim(),
+                PhotoURL: photoUrl
+            };
+
+            if (!staffData.Name || !staffData.Password) {
+                throw new Error('Name and Password are required.');
+            }
+
+            const result = await callBackendApi('addStaff', { staffData });
+            if (result.success) {
+                showMessage(msgEl, result.message || 'Staff added successfully!', 'success');
+                await loadStaffList(); // Refresh data
+                setTimeout(() => {
+                    closeModal('addStaffModal');
+                    document.getElementById('add-staff-form').reset();
+                }, 2000);
+            } else {
+                throw new Error(result.error || 'Failed to add staff.');
+            }
+        } catch (error) {
+            showMessage(msgEl, error.message, 'error', false);
+        } finally {
+            saveBtn.disabled = false;
+            saveBtn.innerHTML = '<i class="fas fa-save"></i> Save Staff';
+        }
+    });
+
+    document.getElementById('add-class-form').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const msgEl = document.getElementById('add-class-message');
+        hideMessage(msgEl);
+        const classData = {
+            ClassName: document.getElementById('add-class-name').value.trim(),
+            Section: document.getElementById('add-class-section').value.trim()
+        };
+        if (!classData.ClassName || !classData.Section) {
+            showMessage(msgEl, 'Class Name and Section are required.', 'error');
+            return;
+        }
+        const result = await callBackendApi('addClass', { classData });
+        if (result.success) {
+            showMessage(msgEl, result.message || 'Class added successfully!', 'success');
+            await loadStudentsAndClasses(false); // Refreshes classMapping
+            setTimeout(() => {
+                closeModal('addClassModal');
+                document.getElementById('add-class-form').reset();
+            }, 2000);
+        } else {
+            showMessage(msgEl, result.error || 'Failed to add class.', 'error');
+        }
+    });
+
+    document.getElementById('add-subject-form').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const msgEl = document.getElementById('add-subject-message');
+        hideMessage(msgEl);
+        const subjectData = {
+            SubjectName: document.getElementById('add-subject-name').value.trim()
+        };
+        if (!subjectData.SubjectName) {
+            showMessage(msgEl, 'Subject Name is required.', 'error');
+            return;
+        }
+        const result = await callBackendApi('addSubject', { subjectData });
+        if (result.success) {
+            showMessage(msgEl, result.message || 'Subject added successfully!', 'success');
+            setTimeout(() => {
+                closeModal('addSubjectModal');
+                document.getElementById('add-subject-form').reset();
+            }, 2000);
+        } else {
+            showMessage(msgEl, result.error || 'Failed to add subject.', 'error');
+        }
+    });
+
+    document.getElementById('assign-class-teacher-form').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const msgEl = document.getElementById('assign-class-teacher-message');
+        hideMessage(msgEl);
+        const assignmentData = {
+            ClassID: document.getElementById('assign-teacher-class').value,
+            StaffID: document.getElementById('assign-teacher-staff').value
+        };
+        if (!assignmentData.ClassID || !assignmentData.StaffID) {
+            showMessage(msgEl, 'Class and Staff selection are required.', 'error');
+            return;
+        }
+        const result = await callBackendApi('assignClassTeacher', { assignmentData });
+        if (result.success) {
+            showMessage(msgEl, result.message || 'Class teacher assigned successfully!', 'success');
+            setTimeout(() => {
+                closeModal('assignClassTeacherModal');
+                document.getElementById('assign-class-teacher-form').reset();
+            }, 2000);
+        } else {
+            showMessage(msgEl, result.error || 'Failed to assign teacher.', 'error');
+        }
+    });
+
+    function populateAddStudentClassDropdown() {
+        const sel = document.getElementById('add-student-class');
+        sel.innerHTML = '<option value="" disabled selected>-- Select Class --</option>';
+        const sortedClassIds = Object.keys(classMapping).sort((a,b) => (classMapping[a].displayName.localeCompare(classMapping[b].displayName)));
+        sortedClassIds.forEach(classId => {
+            const opt = document.createElement('option');
+            opt.value = classId;
+            opt.textContent = classMapping[classId].displayName;
+            sel.appendChild(opt);
+        });
+    }
+
+    function populateAssignTeacherDropdowns() {
+        const classSel = document.getElementById('assign-teacher-class');
+        const staffSel = document.getElementById('assign-teacher-staff');
+        
+        classSel.innerHTML = '<option value="" disabled selected>-- Select Class --</option>';
+        const sortedClassIds = Object.keys(classMapping).sort((a,b) => (classMapping[a].displayName.localeCompare(classMapping[b].displayName)));
+        sortedClassIds.forEach(classId => {
+            const opt = document.createElement('option');
+            opt.value = classId;
+            opt.textContent = classMapping[classId].displayName;
+            classSel.appendChild(opt);
+        });
+
+        staffSel.innerHTML = '<option value="" disabled selected>-- Select Staff --</option>';
+        if (staffListData && staffListData.length > 0) {
+            staffListData.filter(s => String(s.IsActive).toLowerCase() === 'true').forEach(staff => {
+                const opt = document.createElement('option');
+                opt.value = staff.StaffID;
+                opt.textContent = `${staff.Name} (ID: ${staff.StaffID})`;
+                staffSel.appendChild(opt);
+            });
+        }
+    }
     async function loadDashboardData() { showMessage(D.dashboardMessage, "Loading dashboard data...", "info"); const result = await callBackendApi('getDashboardOverview'); if (result?.success && result.data) { hideMessage(D.dashboardMessage); const data = result.data; D.dbTotalStudents.textContent = data.totalStudents ?? '-'; D.dbTotalStaff.textContent = data.totalStaff ?? '-'; D.dbTotalClasses.textContent = data.totalClasses ?? '-'; D.dbTotalGirls.textContent = data.totalGirls ?? '-'; D.dbTotalBoys.textContent = data.totalBoys ?? '-'; D.dbTotalPaid.textContent = formatCurrency(data.totalPaidMoney) ?? '-'; D.dbTotalDue.textContent = formatCurrency(data.totalDuesMoney) ?? '-'; D.dbTotalExpenses.textContent = formatCurrency(data.totalExpenses) ?? '-'; Object.values(dashboardCharts).forEach(chart => chart?.destroy()); dashboardCharts = {}; if (data.studentsPerClass) renderBarChart('studentsPerClassChart', D.studentsPerClassChartEl, 'Students per Class', data.studentsPerClass); if (data.genderSplitPerClass) renderGroupedBarChart('genderSplitPerClassChart', D.genderSplitPerClassChartEl, 'Gender Split per Class', data.genderSplitPerClass); if (data.feesCollectedPerClassThisMonth) renderBarChart('feesCollectedPerClassChart', D.feesCollectedPerClassChartEl, `Fees Collected (${getCurrentMonthYear()})`, data.feesCollectedPerClassThisMonth, true); if (data.duesPerClass) renderBarChart('duesPerClassChart', D.duesPerClassChartEl, 'Total Dues per Class', data.duesPerClass, true); if (data.attendancePerClass) renderBarChart('attendancePerClassChart', D.attendancePerClassChartEl, 'Avg Attendance % (Last 30 Days)', data.attendancePerClass, false, true); } else { showMessage(D.dashboardMessage, result?.error || "Failed to load dashboard.", "error"); } }
     function renderBarChart(chartId, canvasEl, label, dataObject, isCurrency = false, isPercentage = false) { if(!canvasEl) return; const ctx = canvasEl.getContext('2d'); const labels = Object.keys(dataObject); const dataValues = Object.values(dataObject).map(val => (isPercentage && typeof val === 'object' ? val.averageAttendancePercent : val) ); dashboardCharts[chartId] = new Chart(ctx, { type: 'bar', data: { labels: labels, datasets: [{ label: label, data: dataValues, backgroundColor: 'rgba(74, 144, 226, 0.7)', borderColor: 'rgba(74, 144, 226, 1)', borderWidth: 1, borderRadius: 5 }] }, options: { responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: true, grid: { color: '#e9edf0'}, ticks: { color: '#555', callback: function(value) { return isCurrency ? formatCurrency(value) : (isPercentage ? value + '%' : value); } } }, x: { grid: { display: false }, ticks: { color: '#555'} } }, plugins: { legend: { display: false }, title: {display:true, text:label, font:{size:16, weight: '600'}, color: 'var(--primary-color)'}, tooltip: { backgroundColor: '#333', titleFont: { size: 14 }, bodyFont: {size: 12}, padding: 10, cornerRadius: 6} } } }); }
     function renderGroupedBarChart(chartId, canvasEl, label, dataObject) { if(!canvasEl) return; const ctx = canvasEl.getContext('2d'); const labels = Object.keys(dataObject); const boysData = labels.map(l => dataObject[l].boys || 0); const girlsData = labels.map(l => dataObject[l].girls || 0); const othersData = labels.map(l => dataObject[l].other || 0); dashboardCharts[chartId] = new Chart(ctx, { type: 'bar', data: { labels: labels, datasets: [ { label: 'Boys', data: boysData, backgroundColor: 'rgba(74, 144, 226, 0.7)', borderColor: 'rgba(74, 144, 226, 1)', borderWidth: 1, borderRadius: 5 }, { label: 'Girls', data: girlsData, backgroundColor: 'rgba(232, 62, 140, 0.7)', borderColor: 'rgba(232, 62, 140, 1)', borderWidth: 1, borderRadius: 5 }, { label: 'Other', data: othersData, backgroundColor: 'rgba(80, 227, 194, 0.7)', borderColor: 'rgba(80, 227, 194, 1)', borderWidth: 1, borderRadius: 5} ] }, options: { responsive: true, maintainAspectRatio: false, indexAxis: 'x', scales: { y: { beginAtZero: true, stacked: false, grid: { color: '#e9edf0'}, ticks: { color: '#555'} }, x: {stacked: false, grid: { display: false }, ticks: { color: '#555'}} }, plugins: { legend: { display: true, position: 'top', labels: { color: '#555', font: {size: 12}}}, title: { display: true, text: label, font:{size:16, weight: '600'}, color: 'var(--primary-color)' }, tooltip: { backgroundColor: '#333', titleFont: { size: 14 }, bodyFont: {size: 12}, padding: 10, cornerRadius: 6} } } }); }
@@ -1357,278 +1617,6 @@
             fetchAndDisplayCompleteData();
         }
     });
-
-    // --- New Tools Hub Logic ---
-    D.toolsViewContent.addEventListener('click', (e) => {
-        const card = e.target.closest('.tool-card');
-        if (card && card.dataset.modalId) {
-            const modalId = card.dataset.modalId;
-            // Pre-populate dropdowns before opening
-            if (modalId === 'addStudentModal') {
-                populateClassDropdowns(document.getElementById('add-student-class'));
-            }
-            if (modalId === 'assignClassTeacherModal') {
-                populateClassDropdowns(document.getElementById('assign-teacher-class-select'));
-                populateStaffDropdown(document.getElementById('assign-teacher-staff-select'));
-            }
-            if (modalId === 'addStaffModal' || modalId === 'addClassModal' || modalId === 'addSubjectModal'){
-                // Reset forms on open
-                const form = document.getElementById(modalId.replace('Modal','-form'));
-                if(form) form.reset();
-                const msg = document.getElementById(modalId.replace('Modal','-message'));
-                if(msg) hideMessage(msg);
-            }
-            openModal(modalId);
-        }
-    });
-
-    function populateStaffDropdown(selectElement) {
-        if (!selectElement) return;
-        const currentVal = selectElement.value;
-        selectElement.innerHTML = '<option value="" disabled selected>-- Select Staff --</option>';
-        if (staffListData && staffListData.length > 0) {
-            staffListData.filter(s => String(s.IsActive).toLowerCase() === 'true').forEach(staff => {
-                const opt = document.createElement('option');
-                opt.value = staff.StaffID;
-                opt.textContent = `${sanitizeHTML(staff.Name)} (ID: ${sanitizeHTML(staff.StaffID)})`;
-                selectElement.appendChild(opt);
-            });
-        }
-        if(currentVal) selectElement.value = currentVal;
-    }
-
-    function populateClassDropdowns(selectElement) {
-        if (!selectElement) return;
-        const currentVal = selectElement.value;
-        selectElement.innerHTML = '<option value="" disabled selected>-- Select Class --</option>';
-        const sortedClassIds = Object.keys(classMapping).sort((a,b) => (classMapping[a].displayName.localeCompare(classMapping[b].displayName)));
-        sortedClassIds.forEach(classId => {
-            const opt = document.createElement('option');
-            opt.value = classId;
-            opt.textContent = classMapping[classId].displayName;
-            selectElement.appendChild(opt);
-        });
-        if(currentVal) selectElement.value = currentVal;
-    }
-
-    async function uploadImageToGithub(file) {
-        if (!file) return { success: true, url: '' }; // No file selected, not an error
-        if (file.size > 1000000) { // 1MB limit
-            return { success: false, error: 'File is too large. Max 1MB.' };
-        }
-
-        return new Promise((resolve) => {
-            const reader = new FileReader();
-            reader.onload = async (e) => {
-                const base64String = e.target.result.split(',')[1];
-                const payload = {
-                    fileName: `${new Date().getTime()}_${file.name.replace(/[^a-zA-Z0-9.]/g, '_')}`,
-                    base64Content: base64String
-                };
-                const result = await callBackendApi('uploadImageToGithub', payload);
-                if (result.success) {
-                    resolve({ success: true, url: result.url });
-                } else {
-                    resolve({ success: false, error: result.error || 'Failed to upload image.' });
-                }
-            };
-            reader.onerror = (error) => {
-                resolve({ success: false, error: 'Error reading file.' });
-            };
-            reader.readAsDataURL(file);
-        });
-    }
-
-    // Add Student Form Submission
-    document.getElementById('save-new-student-btn').addEventListener('click', async (e) => {
-        const btn = e.target;
-        const msgEl = document.getElementById('add-student-message');
-        hideMessage(msgEl);
-        const form = document.getElementById('add-student-form');
-        if (!form.checkValidity()) {
-            showMessage(msgEl, 'Please fill all required fields.', 'warning');
-            return;
-        }
-
-        btn.disabled = true;
-        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving...';
-
-        const photoFile = document.getElementById('add-student-photo').files[0];
-        const uploadResult = await uploadImageToGithub(photoFile);
-
-        if (!uploadResult.success) {
-            showMessage(msgEl, `Image Upload Failed: ${uploadResult.error}`, 'error');
-            btn.disabled = false;
-            btn.innerHTML = '<i class="fas fa-save"></i> Add Student';
-            return;
-        }
-
-        const studentData = {
-            Name: document.getElementById('add-student-name').value,
-            RollNumber: document.getElementById('add-student-rollNumber').value,
-            Class: document.getElementById('add-student-class').value,
-            FatherName: document.getElementById('add-student-fatherName').value,
-            MotherName: document.getElementById('add-student-motherName').value,
-            Mobile: document.getElementById('add-student-mobile').value,
-            Gmail: document.getElementById('add-student-gmail').value,
-            Password: document.getElementById('add-student-password').value,
-            Gender: document.getElementById('add-student-gender').value,
-            Aadhar: document.getElementById('add-student-aadhar').value,
-            Address: document.getElementById('add-student-address').value,
-            PhotoURL: uploadResult.url
-        };
-
-        const result = await callBackendApi('addStudent', { studentData });
-        if (result.success) {
-            showMessage(msgEl, result.message, 'success');
-            await loadStudentsAndClasses(false); // Refresh student data
-            setTimeout(() => {
-                closeModal('addStudentModal');
-                form.reset();
-                btn.disabled = false;
-                btn.innerHTML = '<i class="fas fa-save"></i> Add Student';
-            }, 1500);
-        } else {
-            showMessage(msgEl, result.error, 'error');
-            btn.disabled = false;
-            btn.innerHTML = '<i class="fas fa-save"></i> Add Student';
-        }
-    });
-
-    // Add Staff Form Submission
-    document.getElementById('save-new-staff-btn').addEventListener('click', async (e) => {
-        const btn = e.target;
-        const msgEl = document.getElementById('add-staff-message');
-        hideMessage(msgEl);
-        const form = document.getElementById('add-staff-form');
-        if (!form.checkValidity()) {
-            showMessage(msgEl, 'Please fill all required fields.', 'warning');
-            return;
-        }
-
-        btn.disabled = true;
-        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving...';
-
-        const photoFile = document.getElementById('add-staff-photo').files[0];
-        const uploadResult = await uploadImageToGithub(photoFile);
-
-        if (!uploadResult.success) {
-            showMessage(msgEl, `Image Upload Failed: ${uploadResult.error}`, 'error');
-            btn.disabled = false;
-            btn.innerHTML = '<i class="fas fa-save"></i> Add Staff';
-            return;
-        }
-
-        const staffData = {
-            Name: document.getElementById('add-staff-name').value,
-            Mobile: document.getElementById('add-staff-mobile').value,
-            Gmail: document.getElementById('add-staff-gmail').value,
-            Password: document.getElementById('add-staff-password').value,
-            SalaryAmount: document.getElementById('add-staff-salary').value,
-            PhotoURL: uploadResult.url
-        };
-
-        const result = await callBackendApi('addStaff', { staffData });
-        if (result.success) {
-            showMessage(msgEl, result.message, 'success');
-            await loadStaffList(); // Refresh staff data
-            setTimeout(() => {
-                closeModal('addStaffModal');
-                form.reset();
-                btn.disabled = false;
-                btn.innerHTML = '<i class="fas fa-save"></i> Add Staff';
-            }, 1500);
-        } else {
-            showMessage(msgEl, result.error, 'error');
-            btn.disabled = false;
-            btn.innerHTML = '<i class="fas fa-save"></i> Add Staff';
-        }
-    });
-
-    // Add Class Form Submission
-    document.getElementById('save-new-class-btn').addEventListener('click', async (e) => {
-        const btn = e.target;
-        const msgEl = document.getElementById('add-class-message');
-        hideMessage(msgEl);
-        const form = document.getElementById('add-class-form');
-        const classData = { 
-            ClassName: document.getElementById('add-class-name').value,
-            Section: document.getElementById('add-class-section').value
-        };
-        if (!classData.ClassName) {
-            showMessage(msgEl, 'Class Name is required.', 'warning');
-            return;
-        }
-        btn.disabled = true;
-        const result = await callBackendApi('addClass', { classData });
-        if (result.success) {
-            showMessage(msgEl, result.message, 'success');
-            await loadStudentsAndClasses(false); // Refresh class data
-            setTimeout(() => {
-                closeModal('addClassModal');
-                form.reset();
-                btn.disabled = false;
-            }, 1500);
-        } else {
-            showMessage(msgEl, result.error, 'error');
-            btn.disabled = false;
-        }
-    });
-
-    // Add Subject Form Submission
-    document.getElementById('save-new-subject-btn').addEventListener('click', async (e) => {
-        const btn = e.target;
-        const msgEl = document.getElementById('add-subject-message');
-        hideMessage(msgEl);
-        const form = document.getElementById('add-subject-form');
-        const subjectData = { SubjectName: document.getElementById('add-subject-name').value };
-        if (!subjectData.SubjectName) {
-            showMessage(msgEl, 'Subject Name is required.', 'warning');
-            return;
-        }
-        btn.disabled = true;
-        const result = await callBackendApi('addSubject', { subjectData });
-        if (result.success) {
-            showMessage(msgEl, result.message, 'success');
-            setTimeout(() => {
-                closeModal('addSubjectModal');
-                form.reset();
-                btn.disabled = false;
-            }, 1500);
-        } else {
-            showMessage(msgEl, result.error, 'error');
-            btn.disabled = false;
-        }
-    });
-
-    // Assign Class Teacher Form Submission
-    document.getElementById('save-assign-teacher-btn').addEventListener('click', async (e) => {
-        const btn = e.target;
-        const msgEl = document.getElementById('assign-teacher-message');
-        hideMessage(msgEl);
-        const form = document.getElementById('assign-teacher-form');
-        const classId = document.getElementById('assign-teacher-class-select').value;
-        const staffId = document.getElementById('assign-teacher-staff-select').value;
-        if (!classId || !staffId) {
-            showMessage(msgEl, 'Both Class and Teacher must be selected.', 'warning');
-            return;
-        }
-        btn.disabled = true;
-        const result = await callBackendApi('assignClassTeacher', { classId, staffId });
-        if (result.success) {
-            showMessage(msgEl, result.message, 'success');
-            await loadStudentsAndClasses(false); // Refresh class data
-            setTimeout(() => {
-                closeModal('assignClassTeacherModal');
-                form.reset();
-                btn.disabled = false;
-            }, 1500);
-        } else {
-            showMessage(msgEl, result.error, 'error');
-            btn.disabled = false;
-        }
-    });
-
 </script>
 
 </body>
