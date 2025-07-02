@@ -383,82 +383,10 @@
         .profile-main-content .mark-paid-btn:hover { background-color: var(--secondary-color-dark); transform: translateY(-2px); box-shadow: var(--shadow-sm);}
         #staffDetailsModal .profile-main-content #add-salary-form-modal { margin-top:25px; padding-top:25px; border-top:1px solid #eee;} 
 
-        /* Responsive Adjustments */        /* All Data Sheets View Enhanced */
-        #all-data-sheets-view .content-grid {
-            display: grid;
-            grid-template-columns: 280px 1fr;
-            gap: 30px;
-            align-items: flex-start;
-        }
-        #sheet-name-list-container {
-            background-color: #f8fafc;
-            border-radius: var(--border-radius);
-            padding: 20px;
-            border: 1px solid var(--border-color);
-            max-height: 70vh;
-            overflow-y: auto;
-        }
-        #sheet-name-list-container h4 {
-            margin-bottom: 15px;
-            font-size: 1.2rem;
-            color: var(--primary-color);
-            border-bottom: 1px solid #eee;
-            padding-bottom: 10px;
-        }
-        #sheet-name-list .sheet-name-item {
-            display: block;
-            width: 100%;
-            text-align: left;
-            padding: 12px 15px;
-            margin-bottom: 8px;
-            border: 1px solid transparent;
-            background-color: #fff;
-            border-radius: var(--border-radius);
-            cursor: pointer;
-            transition: all var(--transition-fast);
-            font-weight: 500;
-            color: var(--text-color);
-            box-shadow: var(--shadow-sm);
-        }
-        #sheet-name-list .sheet-name-item:hover {
-            border-color: var(--secondary-color);
-            color: var(--secondary-color);
-            transform: translateX(5px);
-        }
-        #sheet-name-list .sheet-name-item.active {
-            background-color: var(--primary-color);
-            color: #fff;
-            border-color: var(--primary-color-dark);
-            font-weight: 600;
-            transform: translateX(5px) scale(1.02);
-        }
-        #sheet-data-table-container {
-            border: 1px solid var(--border-color);
-            border-radius: var(--border-radius);
-            background-color: #fff;
-            padding: 25px;
-            min-height: 300px;
-        }
-        #sheet-data-table-container h4 {
-            margin-bottom: 20px;
-            font-size: 1.3rem;
-            color: var(--primary-color);
-        }
-        #sheet-data-table-container .data-table-container {
-            max-height: calc(70vh - 100px);
-            border: none;
-            box-shadow: none;
-        }
-
+        /* Responsive Adjustments */
         @media (max-width: 992px) { 
              .profile-grid { grid-template-columns: 1fr; }
              .profile-sidebar { margin-bottom: 30px; }
-        }
-        #all-data-sheets-view .content-grid {
-            grid-template-columns: 1fr;
-        }
-        #sheet-name-list-container {
-            max-height: 30vh;
         }
         @media (max-width: 768px){
             :root{--sidebar-width:220px;--sidebar-width-collapsed:0; --header-height: 60px;}
@@ -537,7 +465,6 @@
             <li id="nav-add-fees"><a data-view="add-fees-view"><i class="fas fa-file-invoice-dollar"></i><span class="menu-text">Add Fees</span></a></li>
             <li id="nav-add-result"><a data-view="add-results-view"><i class="fas fa-award"></i><span class="menu-text">Add Result</span></a></li>
             <li id="nav-tools"><a data-view="tools-view"><i class="fas fa-tools"></i><span class="menu-text">Tools Hub</span></a></li>
-            <li id="nav-all-data-sheets"><a data-view="all-data-sheets-view"><i class="fas fa-table"></i><span class="menu-text">All Data Sheets</span></a></li>
             <li class="sidebar-divider" id="generator-divider" style="display: none;"></li>
             <!-- Dynamic generators will be appended here -->
             <li class="sidebar-divider" id="sheet-divider" style="display: none;"></li>
@@ -694,21 +621,16 @@
                 </div>
             </section>
 
-            <!-- All Data Sheets View -->
-            <section id="all-data-sheets-view" class="view-section">
-                <div class="view-header"><div class="title-text"><i class="fas fa-table"></i> All Data Sheets</div></div>
+            <!-- Complete Data View -->
+            <section id="complete-data-view" class="view-section">
+                <div class="view-header">
+                    <div class="title-text"><i class="fas fa-database"></i> Complete Spreadsheet Data</div>
+                </div>
                 <div class="section-content">
-                    <div id="all-data-sheets-message" class="message info" style="display: none;"></div>
-                    <div class="content-grid">
-                        <div id="sheet-name-list-container">
-                            <h4>Available Sheets</h4>
-                            <div id="sheet-name-list">
-                                <p class="message info">Loading sheet list...</p>
-                            </div>
-                        </div>
-                        <div id="sheet-data-table-container">
-                            <p class="message info">Select a sheet from the list to view its data.</p>
-                        </div>
+                    <div id="complete-data-message" class="message info" style="display: none;"></div>
+                    <div id="complete-data-container">
+                        <p class="message info">Click the "Fetch Data" button to load all data from your spreadsheet. This can take a moment.</p>
+                        <button id="fetch-complete-data-btn" class="modal-footer save-btn" style="margin-top: 20px;"><i class="fas fa-sync-alt"></i> Fetch Data</button>
                     </div>
                 </div>
             </section>
@@ -777,7 +699,6 @@
     let currentGenericHeaders = [];
     let currentGenericData = []; 
     let currentView = 'dashboard-view'; 
-    let allSheetsDataCache = {};
     const { jsPDF } = window.jspdf;
     let dashboardCharts = {}; 
     let cachedTools = [];
@@ -865,12 +786,7 @@
 
         staffDetailsModal: document.getElementById('staffDetailsModal'), staffDetailsModalTitle: document.getElementById('staff-details-modal-title'),
         staffDetailsModalBody: document.getElementById('staff-details-modal-body'), staffDetailsModalFooter: document.getElementById('staff-details-modal-footer'),
-        addSalaryMessage: document.getElementById('add-salary-message'), addSalaryPaymentBtnModal: document.getElementById('add-salary-payment-btn-modal'),
-
-        allDataSheetsView: document.getElementById('all-data-sheets-view'),
-        allDataSheetsMessage: document.getElementById('all-data-sheets-message'),
-        sheetNameList: document.getElementById('sheet-name-list'),
-        sheetDataTableContainer: document.getElementById('sheet-data-table-container')
+        addSalaryMessage: document.getElementById('add-salary-message'), addSalaryPaymentBtnModal: document.getElementById('add-salary-payment-btn-modal')
     };
 
     // --- Utility Functions ---
@@ -947,7 +863,7 @@
 
 
     // --- Auth & View Management ---
-    function showLoginView() { D.loginContainer.classList.remove('hidden'); D.appContainer.classList.remove('visible'); D.loginSection.style.display='block'; D.premiumInfoSection.style.display='none'; D.loginForm.reset(); hideMessage(D.loginMessage); D.loginButton.classList.remove('processing'); D.loginButton.disabled = false; schoolSpreadsheetId = null; authToken = null; studentsData = []; classMapping = {}; feeTypes = []; staffListData = []; cachedTools = []; cachedGenerators = []; currentResultConfig = null; currentStudentForResult = null; studentsWithResults.clear(); currentGenericHeaders=[]; currentGenericData=[]; allSheetsDataCache = {}; clearDynamicMenuItems(); Object.values(dashboardCharts).forEach(chart => chart?.destroy()); dashboardCharts = {}; localStorage.removeItem('schoolSpreadsheetId'); localStorage.removeItem('userMobile'); localStorage.removeItem('authToken'); D.userGreeting.textContent = ''; document.body.style.overflow = ''; }
+    function showLoginView() { D.loginContainer.classList.remove('hidden'); D.appContainer.classList.remove('visible'); D.loginSection.style.display='block'; D.premiumInfoSection.style.display='none'; D.loginForm.reset(); hideMessage(D.loginMessage); D.loginButton.classList.remove('processing'); D.loginButton.disabled = false; schoolSpreadsheetId = null; authToken = null; studentsData = []; classMapping = {}; feeTypes = []; staffListData = []; cachedTools = []; cachedGenerators = []; currentResultConfig = null; currentStudentForResult = null; studentsWithResults.clear(); currentGenericHeaders=[]; currentGenericData=[]; clearDynamicMenuItems(); Object.values(dashboardCharts).forEach(chart => chart?.destroy()); dashboardCharts = {}; localStorage.removeItem('schoolSpreadsheetId'); localStorage.removeItem('userMobile'); localStorage.removeItem('authToken'); D.userGreeting.textContent = ''; document.body.style.overflow = ''; }
     async function showAppView() {
         D.loginContainer.classList.add('hidden');
         D.appContainer.classList.add('visible');
@@ -982,7 +898,6 @@
             else if (viewId === 'tools-view') loadTools();
             else if (viewId === 'add-fees-view') prepareAddFeesForm();
             else if (viewId === 'staff-list-view') loadStaffList();
-            else if (viewId === 'all-data-sheets-view') loadAllDataSheetsView();
             else if (viewId === 'add-results-view') { if(D.resultClassSelect.options.length <=1 && Object.keys(classMapping).length > 0) populateClassDropdowns(); showStep(1); }
         } else console.error(`View "${viewId}" not found.`);
         updatePdfButtonVisibility(viewId);
@@ -1303,99 +1218,6 @@
     }
     D.addSalaryPaymentBtnModal.addEventListener('click', async () => { hideMessage(D.addSalaryMessage); const form = document.getElementById('add-salary-form-modal'); if (!form) return; const staffId = form.dataset.staffId; const payload = { staffId: staffId, paymentDate: document.getElementById('modal-salary-payment-date').value, amount: document.getElementById('modal-salary-amount').value, monthYear: document.getElementById('modal-salary-monthyear').value.trim(), notes: document.getElementById('modal-salary-notes').value.trim() }; if (!payload.staffId || !payload.paymentDate || !payload.amount || !payload.monthYear) { showMessage(D.addSalaryMessage, "Date, Amount, and Month/Year required.", "error"); return; } if (parseFloat(payload.amount) <=0) { showMessage(D.addSalaryMessage, "Amount must be > 0.", "error"); return; } const result = await callBackendApi('addStaffSalaryPayment', payload); if (result?.success) { showMessage(D.addSalaryMessage, result.message || "Payment added!", "success"); openStaffDetailsModal(staffId); loadStaffList(); } else { showMessage(D.addSalaryMessage, result?.error || "Failed to add payment.", "error"); } });
 
-    // --- All Data Sheets View ---
-    async function loadAllDataSheetsView() {
-        D.sheetDataTableContainer.innerHTML = '<p class="message info">Select a sheet from the list to view its data.</p>';
-        D.sheetNameList.innerHTML = '<div class="spinner" style="margin: 40px auto;"></div>';
-        hideMessage(D.allDataSheetsMessage);
-
-        // If cache is already populated, just render from it.
-        if (Object.keys(allSheetsDataCache).length > 0) {
-            const sheetNames = Object.keys(allSheetsDataCache);
-            if (sheetNames.length > 0) {
-                renderSheetNameList(sheetNames);
-            } else {
-                D.sheetNameList.innerHTML = '<p class="message warning">No custom data sheets found.</p>';
-            }
-            return;
-        }
-
-        const result = await callBackendApi('getAllSheetsData');
-        if (result?.success && result.data) {
-            allSheetsDataCache = result.data; // Populate the cache
-            const sheetNames = Object.keys(result.data);
-            
-            if (sheetNames.length > 0) {
-                renderSheetNameList(sheetNames);
-            } else {
-                D.sheetNameList.innerHTML = '<p class="message warning">No custom data sheets found.</p>';
-            }
-        } else {
-            D.sheetNameList.innerHTML = `<p class="message error">Failed to load sheets data: ${result?.error || 'Unknown error'}</p>`;
-        }
-    }
-
-    function renderSheetNameList(sheetNames) {
-        D.sheetNameList.innerHTML = '';
-        const frag = document.createDocumentFragment();
-        sheetNames.forEach(name => {
-            const item = document.createElement('button');
-            item.className = 'sheet-name-item';
-            item.textContent = name;
-            item.dataset.sheetName = name;
-            item.addEventListener('click', (e) => {
-                D.sheetNameList.querySelectorAll('.sheet-name-item.active').forEach(active => active.classList.remove('active'));
-                e.currentTarget.classList.add('active');
-                loadSheetDataForDisplay(name);
-            });
-            frag.appendChild(item);
-        });
-        D.sheetNameList.appendChild(frag);
-    }
-
-    function loadSheetDataForDisplay(sheetName) { // No longer async
-        D.sheetDataTableContainer.innerHTML = ''; // Clear previous content
-        
-        if (allSheetsDataCache[sheetName]) {
-            renderSheetDataTable(allSheetsDataCache[sheetName], sheetName);
-        } else {
-            // This case should ideally not happen if loadAllDataSheetsView worked correctly
-            D.sheetDataTableContainer.innerHTML = `<p class="message error">Data for \"${sanitizeHTML(sheetName)}\" not found in cache. Please try reloading the view.</p>`;
-        }
-    }
-
-    function renderSheetDataTable(data, sheetName) {
-        const { headers, rows } = data;
-        let tableHtml = `<h4>Data for: <strong>${sanitizeHTML(sheetName)}</strong></h4>`;
-
-        if (!rows || rows.length === 0) {
-            tableHtml += '<p class="message warning">This sheet is empty.</p>';
-            D.sheetDataTableContainer.innerHTML = tableHtml;
-            return;
-        }
-
-        tableHtml += '<div class="data-table-container">';
-        tableHtml += '<table class="data-table">';
-        
-        tableHtml += '<thead><tr>';
-        headers.forEach(h => {
-            tableHtml += `<th>${sanitizeHTML(h)}</th>`;
-        });
-        tableHtml += '</tr></thead>';
-
-        tableHtml += '<tbody>';
-        rows.forEach(rowItem => {
-            tableHtml += '<tr>';
-            rowItem.values.forEach(cell => {
-                tableHtml += `<td>${sanitizeHTML(cell)}</td>`;
-            });
-            tableHtml += '</tr>';
-        });
-        tableHtml += '</tbody></table></div>';
-
-        D.sheetDataTableContainer.innerHTML = tableHtml;
-    }
-
     async function loadDashboardData() { showMessage(D.dashboardMessage, "Loading dashboard data...", "info"); const result = await callBackendApi('getDashboardOverview'); if (result?.success && result.data) { hideMessage(D.dashboardMessage); const data = result.data; D.dbTotalStudents.textContent = data.totalStudents ?? '-'; D.dbTotalStaff.textContent = data.totalStaff ?? '-'; D.dbTotalClasses.textContent = data.totalClasses ?? '-'; D.dbTotalGirls.textContent = data.totalGirls ?? '-'; D.dbTotalBoys.textContent = data.totalBoys ?? '-'; D.dbTotalPaid.textContent = formatCurrency(data.totalPaidMoney) ?? '-'; D.dbTotalDue.textContent = formatCurrency(data.totalDuesMoney) ?? '-'; D.dbTotalExpenses.textContent = formatCurrency(data.totalExpenses) ?? '-'; Object.values(dashboardCharts).forEach(chart => chart?.destroy()); dashboardCharts = {}; if (data.studentsPerClass) renderBarChart('studentsPerClassChart', D.studentsPerClassChartEl, 'Students per Class', data.studentsPerClass); if (data.genderSplitPerClass) renderGroupedBarChart('genderSplitPerClassChart', D.genderSplitPerClassChartEl, 'Gender Split per Class', data.genderSplitPerClass); if (data.feesCollectedPerClassThisMonth) renderBarChart('feesCollectedPerClassChart', D.feesCollectedPerClassChartEl, `Fees Collected (${getCurrentMonthYear()})`, data.feesCollectedPerClassThisMonth, true); if (data.duesPerClass) renderBarChart('duesPerClassChart', D.duesPerClassChartEl, 'Total Dues per Class', data.duesPerClass, true); if (data.attendancePerClass) renderBarChart('attendancePerClassChart', D.attendancePerClassChartEl, 'Avg Attendance % (Last 30 Days)', data.attendancePerClass, false, true); } else { showMessage(D.dashboardMessage, result?.error || "Failed to load dashboard.", "error"); } }
     function renderBarChart(chartId, canvasEl, label, dataObject, isCurrency = false, isPercentage = false) { if(!canvasEl) return; const ctx = canvasEl.getContext('2d'); const labels = Object.keys(dataObject); const dataValues = Object.values(dataObject).map(val => (isPercentage && typeof val === 'object' ? val.averageAttendancePercent : val) ); dashboardCharts[chartId] = new Chart(ctx, { type: 'bar', data: { labels: labels, datasets: [{ label: label, data: dataValues, backgroundColor: 'rgba(74, 144, 226, 0.7)', borderColor: 'rgba(74, 144, 226, 1)', borderWidth: 1, borderRadius: 5 }] }, options: { responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: true, grid: { color: '#e9edf0'}, ticks: { color: '#555', callback: function(value) { return isCurrency ? formatCurrency(value) : (isPercentage ? value + '%' : value); } } }, x: { grid: { display: false }, ticks: { color: '#555'} } }, plugins: { legend: { display: false }, title: {display:true, text:label, font:{size:16, weight: '600'}, color: 'var(--primary-color)'}, tooltip: { backgroundColor: '#333', titleFont: { size: 14 }, bodyFont: {size: 12}, padding: 10, cornerRadius: 6} } } }); }
     function renderGroupedBarChart(chartId, canvasEl, label, dataObject) { if(!canvasEl) return; const ctx = canvasEl.getContext('2d'); const labels = Object.keys(dataObject); const boysData = labels.map(l => dataObject[l].boys || 0); const girlsData = labels.map(l => dataObject[l].girls || 0); const othersData = labels.map(l => dataObject[l].other || 0); dashboardCharts[chartId] = new Chart(ctx, { type: 'bar', data: { labels: labels, datasets: [ { label: 'Boys', data: boysData, backgroundColor: 'rgba(74, 144, 226, 0.7)', borderColor: 'rgba(74, 144, 226, 1)', borderWidth: 1, borderRadius: 5 }, { label: 'Girls', data: girlsData, backgroundColor: 'rgba(232, 62, 140, 0.7)', borderColor: 'rgba(232, 62, 140, 1)', borderWidth: 1, borderRadius: 5 }, { label: 'Other', data: othersData, backgroundColor: 'rgba(80, 227, 194, 0.7)', borderColor: 'rgba(80, 227, 194, 1)', borderWidth: 1, borderRadius: 5} ] }, options: { responsive: true, maintainAspectRatio: false, indexAxis: 'x', scales: { y: { beginAtZero: true, stacked: false, grid: { color: '#e9edf0'}, ticks: { color: '#555'} }, x: {stacked: false, grid: { display: false }, ticks: { color: '#555'}} }, plugins: { legend: { display: true, position: 'top', labels: { color: '#555', font: {size: 12}}}, title: { display: true, text: label, font:{size:16, weight: '600'}, color: 'var(--primary-color)' }, tooltip: { backgroundColor: '#333', titleFont: { size: 14 }, bodyFont: {size: 12}, padding: 10, cornerRadius: 6} } } }); }
@@ -1428,6 +1250,87 @@
     });
     window.addEventListener('resize',()=>{const mt=D.sidebarToggleMobile; if(window.innerWidth<=768){mt.style.display='block';if(!D.sidebar.classList.contains('open'))D.sidebar.classList.add('collapsed');}else{mt.style.display='none';D.sidebar.classList.remove('open');D.sidebar.classList.remove('collapsed');}});
 
+    async function fetchAndDisplayCompleteData() {
+        showMessage(D.completeDataMessage, 'Fetching all data, this may take a moment...', 'info');
+        D.completeDataContainer.innerHTML = ''; // Clear previous content
+        const result = await callBackendApi('completedata_fatch', {});
+
+        if (result?.success && result.data) {
+            hideMessage(D.completeDataMessage);
+            const allData = result.data;
+            const container = D.completeDataContainer;
+            
+            if (Object.keys(allData).length === 0) {
+                container.innerHTML = '<p class="message warning">No data or sheets found in the spreadsheet.</p>';
+                return;
+            }
+
+            const frag = document.createDocumentFragment();
+
+            for (const sheetName in allData) {
+                const sheetData = allData[sheetName];
+                
+                const sheetHeader = document.createElement('h3');
+                sheetHeader.textContent = sanitizeHTML(sheetName);
+                sheetHeader.style.cssText = "margin-top: 30px; margin-bottom: 15px; padding-bottom: 10px; border-bottom: 2px solid var(--primary-color); color: var(--primary-color);";
+                frag.appendChild(sheetHeader);
+
+                if (Array.isArray(sheetData) && sheetData.length > 0) {
+                    const tableContainer = document.createElement('div');
+                    tableContainer.className = 'data-table-container';
+                    tableContainer.style.maxHeight = '50vh';
+
+                    const table = document.createElement('table');
+                    table.className = 'data-table';
+                    
+                    const thead = document.createElement('thead');
+                    const headerRow = document.createElement('tr');
+                    const headers = Object.keys(sheetData[0]);
+                    headers.forEach(headerText => {
+                        const th = document.createElement('th');
+                        th.textContent = sanitizeHTML(headerText);
+                        headerRow.appendChild(th);
+                    });
+                    thead.appendChild(headerRow);
+                    table.appendChild(thead);
+
+                    const tbody = document.createElement('tbody');
+                    sheetData.forEach(row => {
+                        const tr = document.createElement('tr');
+                        headers.forEach(header => {
+                            const td = document.createElement('td');
+                            td.textContent = sanitizeHTML(row[header]);
+                            tr.appendChild(td);
+                        });
+                        tbody.appendChild(tr);
+                    });
+                    table.appendChild(tbody);
+                    tableContainer.appendChild(table);
+                    frag.appendChild(tableContainer);
+                } else if (sheetData.error) {
+                     const errorP = document.createElement('p');
+                     errorP.className = 'message error';
+                     errorP.textContent = `Error loading ${sheetName}: ${sheetData.error}`;
+                     frag.appendChild(errorP);
+                } else {
+                    const noDataP = document.createElement('p');
+                    noDataP.className = 'message info';
+                    noDataP.textContent = `Sheet \"${sheetName}\" is empty or contains only headers.`;
+                    frag.appendChild(noDataP);
+                }
+            }
+            container.appendChild(frag);
+
+        } else {
+            showMessage(D.completeDataMessage, result?.error || 'Failed to fetch complete data.', 'error');
+        }
+    }
+
+    D.completeDataView.addEventListener('click', (e) => {
+        if (e.target && e.target.id === 'fetch-complete-data-btn') {
+            fetchAndDisplayCompleteData();
+        }
+    });
 </script>
 
 </body>
