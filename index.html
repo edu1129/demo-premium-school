@@ -925,7 +925,45 @@
         switchView('dashboard-view', 'Dashboard', 'nav-dashboard');
     }
     function showPremiumView() { D.loginSection.style.display='none'; D.premiumInfoSection.style.display='block'; }
-    D.loginForm.addEventListener('submit', async (e) => { e.preventDefault(); hideMessage(D.loginMessage); const m = D.mobileInput.value.trim(), p = D.passwordInput.value.trim(); if (!m || !p) { showMessage(D.loginMessage, 'Mobile and password are required.', 'warning'); return; } D.loginButton.classList.add('processing'); D.loginButton.disabled = true; try { const res = await fetch('/login', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ mobile: m, password: p }) }); const r = await res.json(); D.loginButton.classList.remove('processing'); D.loginButton.disabled = false; if (res.ok && r?.success && r.spreadsheetId && r.token) { schoolSpreadsheetId = r.spreadsheetId; authToken = r.token; localStorage.setItem('schoolSpreadsheetId', schoolSpreadsheetId); localStorage.setItem('authToken', authToken); localStorage.setItem('userMobile', m); await showAppView(); } else if (res.ok && r?.reason === 'not_premium') { showPremiumView(); } else { showMessage(D.loginMessage, r?.message || r?.error || 'Login failed. Check credentials.', 'error'); localStorage.clear(); } } catch (err) { D.loginButton.classList.remove('processing'); D.loginButton.disabled = false; console.error("Login fetch error:", err); showMessage(D.loginMessage, `Login Error: ${err.message}`, 'error'); localStorage.clear(); } });
+    D.loginForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        hideMessage(D.loginMessage);
+        const m = D.mobileInput.value.trim();
+        const p = D.passwordInput.value.trim();
+        if (!m || !p) {
+            showMessage(D.loginMessage, 'Mobile and password are required.', 'warning');
+            return;
+        }
+        D.loginButton.classList.add('processing');
+        D.loginButton.disabled = true;
+
+        google.script.run
+            .withSuccessHandler(r => {
+                D.loginButton.classList.remove('processing');
+                D.loginButton.disabled = false;
+                if (r?.success && r.spreadsheetId && r.token) {
+                    schoolSpreadsheetId = r.spreadsheetId;
+                    authToken = r.token;
+                    localStorage.setItem('schoolSpreadsheetId', schoolSpreadsheetId);
+                    localStorage.setItem('authToken', authToken);
+                    localStorage.setItem('userMobile', m);
+                    showAppView();
+                } else if (r?.reason === 'not_premium') {
+                    showPremiumView();
+                } else {
+                    showMessage(D.loginMessage, r?.message || r?.error || 'Login failed. Check credentials.', 'error');
+                    localStorage.clear();
+                }
+            })
+            .withFailureHandler(err => {
+                D.loginButton.classList.remove('processing');
+                D.loginButton.disabled = false;
+                console.error("Login error:", err);
+                showMessage(D.loginMessage, `Login Error: ${err.message}`, 'error');
+                localStorage.clear();
+            })
+            .handleLogin(m, p);
+    });
     D.premiumBackBtn.addEventListener('click', () => { D.premiumInfoSection.style.display='none'; D.loginSection.style.display='block'; D.loginForm.reset(); hideMessage(D.loginMessage); });
     D.logoutBtn.addEventListener('click', () => { if(confirm("Are you sure you want to logout?")) showLoginView(); });
     function toggleSidebar() { D.sidebar.classList.toggle('collapsed'); }
