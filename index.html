@@ -464,14 +464,6 @@
             <li id="nav-staff"><a data-view="staff-list-view"><i class="fas fa-users-cog"></i><span class="menu-text">Staff</span></a></li>
             <li id="nav-add-fees"><a data-view="add-fees-view"><i class="fas fa-file-invoice-dollar"></i><span class="menu-text">Add Fees</span></a></li>
             <li id="nav-add-result"><a data-view="add-results-view"><i class="fas fa-award"></i><span class="menu-text">Add Result</span></a></li>
-            <li class="sidebar-divider"></li>
-            <li id="nav-add-student"><a data-modal-target="addStudentModal"><i class="fas fa-user-plus"></i><span class="menu-text">Add Student</span></a></li>
-            <li id="nav-add-staff"><a data-modal-target="addStaffModal"><i class="fas fa-user-tie"></i><span class="menu-text">Add Staff</span></a></li>
-            <li id="nav-add-class"><a data-modal-target="addClassModal"><i class="fas fa-chalkboard"></i><span class="menu-text">Add Class</span></a></li>
-            <li id="nav-add-subject"><a data-modal-target="addSubjectModal"><i class="fas fa-book"></i><span class="menu-text">Add Subject</span></a></li>
-            <li id="nav-assign-teacher"><a data-modal-target="assignClassTeacherModal"><i class="fas fa-chalkboard-teacher"></i><span class="menu-text">Assign Class Teacher</span></a></li>
-            <li id="nav-add-expense"><a data-modal-target="addExpenseModal"><i class="fas fa-receipt"></i><span class="menu-text">Add Expense</span></a></li>
-            <li class="sidebar-divider"></li>
             <li id="nav-tools"><a data-view="tools-view"><i class="fas fa-tools"></i><span class="menu-text">Tools Hub</span></a></li>
             <li class="sidebar-divider" id="generator-divider" style="display: none;"></li>
             <!-- Dynamic generators will be appended here -->
@@ -629,20 +621,6 @@
                 </div>
             </section>
 
-            <!-- Complete Data View -->
-            <section id="complete-data-view" class="view-section">
-                <div class="view-header">
-                    <div class="title-text"><i class="fas fa-database"></i> Complete Spreadsheet Data</div>
-                </div>
-                <div class="section-content">
-                    <div id="complete-data-message" class="message info" style="display: none;"></div>
-                    <div id="complete-data-container">
-                        <p class="message info">Click the "Fetch Data" button to load all data from your spreadsheet. This can take a moment.</p>
-                        <button id="fetch-complete-data-btn" class="modal-footer save-btn" style="margin-top: 20px;"><i class="fas fa-sync-alt"></i> Fetch Data</button>
-                    </div>
-                </div>
-            </section>
-
             <!-- Generic Sheet View -->
             <section id="generic-sheet-view" class="view-section">
                  <div class="view-header">
@@ -690,23 +668,6 @@
 <!-- Staff Details Modal -->
 <div id="staffDetailsModal" class="modal"><div class="modal-content modal-xl"><div class="modal-header"><h3 id="staff-details-modal-title"><i class="fas fa-user-tie"></i> Staff Details</h3><button class="close-btn" data-modal-id="staffDetailsModal">×</button></div><div class="modal-body" id="staff-details-modal-body"><p class="message info">Loading staff details...</p></div><div class="modal-footer" id="staff-details-modal-footer"><div id="add-salary-message" class="message" style="display:none;"></div><button type="button" class="cancel-btn" data-modal-id="staffDetailsModal"><i class="fas fa-times"></i> Close</button><button type="button" class="save-btn" id="add-salary-payment-btn-modal" style="display:none;"><i class="fas fa-money-check-alt"></i> Save Payment</button></div></div></div>
 
-<!-- Add Student Modal -->
-<div id="addStudentModal" class="modal"><div class="modal-content modal-lg"><div class="modal-header"><h3><i class="fas fa-user-plus"></i> Add New Student</h3><button class="close-btn" data-modal-id="addStudentModal">×</button></div><div class="modal-body"><form id="add-student-form" novalidate><div class="form-grid"><div class="input-group"><label for="add-rollNumber">Roll No:</label><input type="text" id="add-rollNumber" required></div><div class="input-group"><label for="add-name">Name:</label><input type="text" id="add-name" required></div><div class="input-group"><label for="add-class">Class:</label><select id="add-class" required><option value="" disabled selected>-- Select Class --</option></select></div><div class="input-group"><label for="add-mobile">Mobile:</label><input type="tel" id="add-mobile"></div><div class="input-group"><label for="add-gmail">Gmail:</label><input type="email" id="add-gmail"></div><div class="input-group"><label for="add-password">Password:</label><input type="text" id="add-password" required></div><div class="input-group"><label for="add-fatherName">Father's Name:</label><input type="text" id="add-fatherName"></div><div class="input-group"><label for="add-motherName">Mother's Name:</label><input type="text" id="add-motherName"></div><div class="input-group"><label for="add-address">Address:</label><input type="text" id="add-address"></div><div class="input-group"><label for="add-aadhar">Aadhar:</label><input type="text" id="add-aadhar"></div><div class="input-group"><label for="add-gender">Gender:</label><select id="add-gender"><option value="Male">Male</option><option value="Female">Female</option><option value="Other">Other</option></select></div><div class="input-group"><label for="add-photo">Photo:</label><input type="file" id="add-photo" accept="image/*"></div></div></form></div><div class="modal-footer"><div id="add-student-message" class="message" style="display:none;"></div><button type="button" class="cancel-btn" data-modal-id="addStudentModal"><i class="fas fa-times"></i> Cancel</button><button type="button" class="save-btn" id="save-new-student-btn"><i class="fas fa-save"></i> Save Student</button></div></div></div>
-
-<!-- Add Staff Modal -->
-<div id="addStaffModal" class="modal"><div class="modal-content"><div class="modal-header"><h3><i class="fas fa-user-tie"></i> Add New Staff</h3><button class="close-btn" data-modal-id="addStaffModal">×</button></div><div class="modal-body"><form id="add-staff-form" novalidate><div class="form-grid"><div class="input-group"><label for="add-staff-name">Name:</label><input type="text" id="add-staff-name" required></div><div class="input-group"><label for="add-staff-mobile">Mobile:</label><input type="tel" id="add-staff-mobile" required></div><div class="input-group"><label for="add-staff-gmail">Gmail:</label><input type="email" id="add-staff-gmail"></div><div class="input-group"><label for="add-staff-password">Password:</label><input type="text" id="add-staff-password" required></div><div class="input-group"><label for="add-staff-salary">Salary Amount:</label><input type="number" id="add-staff-salary"></div><div class="input-group"><label for="add-staff-photo">Photo:</label><input type="file" id="add-staff-photo" accept="image/*"></div></div></form></div><div class="modal-footer"><div id="add-staff-message" class="message" style="display:none;"></div><button type="button" class="cancel-btn" data-modal-id="addStaffModal"><i class="fas fa-times"></i> Cancel</button><button type="button" class="save-btn" id="save-new-staff-btn"><i class="fas fa-save"></i> Save Staff</button></div></div></div>
-
-<!-- Add Class Modal -->
-<div id="addClassModal" class="modal"><div class="modal-content" style="max-width: 500px;"><div class="modal-header"><h3><i class="fas fa-chalkboard"></i> Add New Class</h3><button class="close-btn" data-modal-id="addClassModal">×</button></div><div class="modal-body"><form id="add-class-form" novalidate><div class="input-group"><label for="add-className">Class Name (e.g., Class 10):</label><input type="text" id="add-className" required></div><div class="input-group"><label for="add-section">Section (e.g., A):</label><input type="text" id="add-section"></div></form></div><div class="modal-footer"><div id="add-class-message" class="message" style="display:none;"></div><button type="button" class="cancel-btn" data-modal-id="addClassModal"><i class="fas fa-times"></i> Cancel</button><button type="button" class="save-btn" id="save-new-class-btn"><i class="fas fa-save"></i> Save Class</button></div></div></div>
-
-<!-- Add Subject Modal -->
-<div id="addSubjectModal" class="modal"><div class="modal-content" style="max-width: 500px;"><div class="modal-header"><h3><i class="fas fa-book"></i> Add New Subject</h3><button class="close-btn" data-modal-id="addSubjectModal">×</button></div><div class="modal-body"><form id="add-subject-form" novalidate><div class="input-group"><label for="add-subjectName">Subject Name (e.g., Mathematics):</label><input type="text" id="add-subjectName" required></div></form></div><div class="modal-footer"><div id="add-subject-message" class="message" style="display:none;"></div><button type="button" class="cancel-btn" data-modal-id="addSubjectModal"><i class="fas fa-times"></i> Cancel</button><button type="button" class="save-btn" id="save-new-subject-btn"><i class="fas fa-save"></i> Save Subject</button></div></div></div>
-
-<!-- Assign Class Teacher Modal -->
-<div id="assignClassTeacherModal" class="modal"><div class="modal-content" style="max-width: 500px;"><div class="modal-header"><h3><i class="fas fa-chalkboard-teacher"></i> Assign Class Teacher</h3><button class="close-btn" data-modal-id="assignClassTeacherModal">×</button></div><div class="modal-body"><form id="assign-teacher-form" novalidate><div class="input-group"><label for="assign-teacher-class">Select Class:</label><select id="assign-teacher-class" required><option value="" disabled selected>-- Select Class --</option></select></div><div class="input-group"><label for="assign-teacher-staff">Select Teacher:</label><select id="assign-teacher-staff" required><option value="" disabled selected>-- Select Staff --</option></select></div></form></div><div class="modal-footer"><div id="assign-teacher-message" class="message" style="display:none;"></div><button type="button" class="cancel-btn" data-modal-id="assignClassTeacherModal"><i class="fas fa-times"></i> Cancel</button><button type="button" class="save-btn" id="save-assign-teacher-btn"><i class="fas fa-save"></i> Assign Teacher</button></div></div></div>
-
-<!-- Add Expense Modal -->
-<div id="addExpenseModal" class="modal"><div class="modal-content" style="max-width: 500px;"><div class="modal-header"><h3><i class="fas fa-receipt"></i> Add New Expense</h3><button class="close-btn" data-modal-id="addExpenseModal">×</button></div><div class="modal-body"><form id="add-expense-form" novalidate><div class="input-group"><label for="add-expense-category">Category:</label><input type="text" id="add-expense-category" required></div><div class="input-group"><label for="add-expense-description">Description:</label><textarea id="add-expense-description" rows="3"></textarea></div><div class="input-group"><label for="add-expense-amount">Amount:</label><input type="number" id="add-expense-amount" required></div></form></div><div class="modal-footer"><div id="add-expense-message" class="message" style="display:none;"></div><button type="button" class="cancel-btn" data-modal-id="addExpenseModal"><i class="fas fa-times"></i> Cancel</button><button type="button" class="save-btn" id="save-new-expense-btn"><i class="fas fa-save"></i> Save Expense</button></div></div></div>
 
 <script>
     // --- State Variables ---
@@ -812,97 +773,7 @@
         staffDetailsModal: document.getElementById('staffDetailsModal'), staffDetailsModalTitle: document.getElementById('staff-details-modal-title'),
         staffDetailsModalBody: document.getElementById('staff-details-modal-body'), staffDetailsModalFooter: document.getElementById('staff-details-modal-footer'),
         addSalaryMessage: document.getElementById('add-salary-message'), addSalaryPaymentBtnModal: document.getElementById('add-salary-payment-btn-modal')
-    ,
-
-        // New Modals for Adding Data
-        addStudentModal: document.getElementById('addStudentModal'),
-        addStudentForm: document.getElementById('add-student-form'),
-        addStudentMessage: document.getElementById('add-student-message'),
-        saveNewStudentBtn: document.getElementById('save-new-student-btn'),
-        addStudentClassSelect: document.getElementById('add-class'),
-
-        addStaffModal: document.getElementById('addStaffModal'),
-        addStaffForm: document.getElementById('add-staff-form'),
-        addStaffMessage: document.getElementById('add-staff-message'),
-        saveNewStaffBtn: document.getElementById('save-new-staff-btn'),
-
-        addClassModal: document.getElementById('addClassModal'),
-        addClassForm: document.getElementById('add-class-form'),
-        addClassMessage: document.getElementById('add-class-message'),
-        saveNewClassBtn: document.getElementById('save-new-class-btn'),
-
-        addSubjectModal: document.getElementById('addSubjectModal'),
-        addSubjectForm: document.getElementById('add-subject-form'),
-        addSubjectMessage: document.getElementById('add-subject-message'),
-        saveNewSubjectBtn: document.getElementById('save-new-subject-btn'),
-
-        assignClassTeacherModal: document.getElementById('assignClassTeacherModal'),
-        assignTeacherForm: document.getElementById('assign-teacher-form'),
-        assignTeacherMessage: document.getElementById('assign-teacher-message'),
-        saveAssignTeacherBtn: document.getElementById('save-assign-teacher-btn'),
-        assignTeacherClassSelect: document.getElementById('assign-teacher-class'),
-        assignTeacherStaffSelect: document.getElementById('assign-teacher-staff'),
-
-        addExpenseModal: document.getElementById('addExpenseModal'),
-        addExpenseForm: document.getElementById('add-expense-form'),
-        addExpenseMessage: document.getElementById('add-expense-message'),
-        saveNewExpenseBtn: document.getElementById('save-new-expense-btn')
     };
-
-    // --- GitHub Photo Upload Config & Function ---
-    const GITHUB_CONFIG = {
-        username: "edu1129",
-        repo: "Hhhhh",
-        token: "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" // Note: Storing tokens client-side is insecure.
-    };
-
-    async function uploadPhotoToGitHub(file) {
-        if (!file) return null;
-        if (!GITHUB_CONFIG.token) {
-            console.warn("GitHub token is not set. Skipping photo upload.");
-            alert("GitHub token is not configured. Photo cannot be uploaded.");
-            return null;
-        }
-
-        const reader = new FileReader();
-        const promise = new Promise((resolve, reject) => {
-            reader.onload = () => resolve(reader.result.split(',')[1]); // Get base64 content
-            reader.onerror = error => reject(error);
-        });
-        reader.readAsDataURL(file);
-        const base64Content = await promise;
-        const fileName = `${new Date().getTime()}-${file.name.replace(/[^a-zA-Z0-9._-]/g, '')}`;
-        const url = `https://api.github.com/repos/${GITHUB_CONFIG.username}/${GITHUB_CONFIG.repo}/contents/${fileName}`;
-
-        const payload = {
-            message: `feat: upload photo ${fileName}`,
-            content: base64Content
-        };
-
-        try {
-            showLoading();
-            const response = await fetch(url, {
-                method: 'PUT',
-                headers: {
-                    'Authorization': `token ${GITHUB_CONFIG.token}`,
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(payload)
-            });
-            const result = await response.json();
-            hideLoading();
-            if (response.ok && result.content && result.content.download_url) {
-                return result.content.download_url;
-            } else {
-                console.error('GitHub Upload Error:', result);
-                throw new Error(result.message || 'Failed to upload image to GitHub.');
-            }
-        } catch (error) {
-            hideLoading();
-            console.error('GitHub API fetch error:', error);
-            throw error;
-        }
-    }
 
     // --- Utility Functions ---
     const showLoading = () => D.loadingOverlay.classList.add('show');
@@ -1019,25 +890,17 @@
         if (window.innerWidth <= 768 && D.sidebar.classList.contains('open')) D.sidebar.classList.remove('open');
         D.mainContent.scrollTop = 0;
     }
-        D.sidebarMenu.addEventListener('click', async (e) => {
+    D.sidebarMenu.addEventListener('click', (e) => {
         const link = e.target.closest('a');
         if (link) {
             const viewId = link.dataset.view;
             const sheetName = link.dataset.sheetName; 
             const iframeUrl = link.dataset.iframeUrl;
             const iframeName = link.dataset.iframeName;
-            const modalTarget = link.dataset.modalTarget;
             const navId = link.closest('li').id;
             let title = link.querySelector('.menu-text')?.textContent || 'View';
 
-            if (modalTarget) {
-                e.preventDefault();
-                if (modalTarget === 'assignClassTeacherModal') {
-                    if (staffListData.length === 0) await loadStaffList();
-                    populateStaffDropdown(D.assignTeacherStaffSelect);
-                }
-                openModal(modalTarget);
-            } else if (iframeUrl) { 
+            if (iframeUrl) { 
                 e.preventDefault();
                 openFullscreenIframe(iframeName || title, iframeUrl);
                 if (navId) setActiveMenuItem(navId); 
@@ -1134,10 +997,7 @@
     function displayClassTiles() { D.studentListMainContent.innerHTML = ''; const classListContainer = document.createElement('div'); classListContainer.id = 'student-classes-list'; if (Object.keys(classMapping).length === 0) { classListContainer.innerHTML = `<p class="message warning">No classes found. Please configure classes in your spreadsheet.</p>`; } else { const sortedClassIds = Object.keys(classMapping).sort((a,b) => (classMapping[a].displayName.localeCompare(classMapping[b].displayName))); sortedClassIds.forEach(classId => { const classInfo = classMapping[classId]; const tile = document.createElement('div'); tile.className = 'class-tile'; tile.dataset.classId = classId; tile.innerHTML = `<i class="fas fa-chalkboard"></i><h4>${sanitizeHTML(classInfo.displayName)}</h4><p>${studentsData.filter(s => s.Class === classId).length} Students</p>`; tile.addEventListener('click', () => displayStudentsForClass(classId)); classListContainer.appendChild(tile); }); } D.studentListMainContent.appendChild(classListContainer); updatePdfButtonVisibility(currentView); D.studentListMainContent.dataset.currentClassId = ''; }
     function displayStudentsForClass(classId) { D.studentListMainContent.innerHTML = ''; currentClassStudents = studentsData.filter(s => String(s.Class || '').trim() === classId); D.studentListMainContent.dataset.currentClassId = classId; const headerDiv = document.createElement('div'); headerDiv.style.display = 'flex'; headerDiv.style.justifyContent = 'space-between'; headerDiv.style.alignItems = 'center'; headerDiv.style.marginBottom = '20px'; const backButton = document.createElement('button'); backButton.innerHTML = '<i class="fas fa-arrow-left"></i> Back to Classes'; backButton.className = 'btn cancel-btn back-to-classes-btn'; backButton.addEventListener('click', displayClassTiles); headerDiv.appendChild(backButton); const classTitle = document.createElement('h3'); classTitle.style.textAlign = 'right'; classTitle.style.flexGrow = '1'; classTitle.style.color = 'var(--primary-color)'; classTitle.style.fontFamily = "'Titillium Web', sans-serif"; classTitle.textContent = `${sanitizeHTML(classMapping[classId]?.displayName || classId)} - Student List`; headerDiv.appendChild(classTitle); D.studentListMainContent.appendChild(headerDiv); const tableContainer = document.createElement('div'); tableContainer.className = 'student-table-container data-table-container'; const table = document.createElement('table'); table.className = 'student-table data-table'; table.innerHTML = `<thead><tr><th>Photo</th><th>Roll No</th><th>Name</th><th>Mobile</th><th>Father's Name</th><th>Actions</th></tr></thead><tbody id="current-class-student-table-body"></tbody>`; tableContainer.appendChild(table); D.studentListMainContent.appendChild(tableContainer); const tbody = document.getElementById('current-class-student-table-body'); tbody.innerHTML = ''; if (currentClassStudents.length === 0) { tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;padding:30px;color:var(--text-light-color);">No students in this class.</td></tr>`; } else { const frag = document.createDocumentFragment(); currentClassStudents.sort((a, b) => (a.RollNumber || '').localeCompare(b.RollNumber || '', undefined, {numeric:true}) || (a.Name || '').localeCompare(b.Name || '') ).forEach(s => { const tr = document.createElement('tr'); tr.innerHTML = `<td>${getStudentPhotoHtml(s.PhotoURL,'student-photo')}</td><td>${sanitizeHTML(s.RollNumber||'N/A')}</td><td>${sanitizeHTML(s.Name||'N/A')}</td><td>${sanitizeHTML(s.Mobile||'N/A')}</td><td>${sanitizeHTML(s.FatherName||'N/A')}</td><td class="action-col"><i class="fas fa-eye view-btn" title="View Details" data-studentid="${sanitizeHTML(s.StudentID)}"></i> <i class="fas fa-edit edit-btn" title="Edit Student" data-studentid="${sanitizeHTML(s.StudentID)}"></i> <i class="fas fa-trash-alt delete-btn" title="Delete Student" data-studentid="${sanitizeHTML(s.StudentID)}" data-studentname="${sanitizeHTML(s.Name || 'this student')}"></i></td>`; frag.appendChild(tr); }); tbody.appendChild(frag); } updatePdfButtonVisibility(currentView); }
     D.studentListMainContent.addEventListener('click', async (e) => { if (e.target?.classList.contains('edit-btn')) { const id = e.target.dataset.studentid; if (id) openEditStudentModal(id); } if (e.target?.classList.contains('delete-btn')) { const id = e.target.dataset.studentid; const name = e.target.dataset.studentname; if (id) handleDeleteStudent(id, name); } if (e.target?.classList.contains('view-btn')) { const id = e.target.dataset.studentid; if (id) openStudentDetailsModal(id); } });
-        function populateClassDropdowns(selectors = [D.editClassSelect, D.resultClassSelect, D.feeClassSelect, D.addStudentClassSelect, D.assignTeacherClassSelect]) { const createOption = (val, txt) => { const opt = document.createElement('option'); opt.value = val; opt.textContent = txt; return opt; }; selectors.forEach(sel => { if(sel) { const currentVal = sel.value; sel.innerHTML = '<option value="" disabled selected>-- Select Class --</option>'; const sortedClassIds = Object.keys(classMapping).sort((a,b) => (classMapping[a].displayName.localeCompare(classMapping[b].displayName))); sortedClassIds.forEach(classId => { sel.appendChild(createOption(classId, classMapping[classId].displayName)); }); if(currentVal) sel.value = currentVal; } }); }
-    function populateStaffDropdown(selectElement) { if (!selectElement) return; selectElement.innerHTML = '<option value="" disabled selected>-- Select Staff --</option>'; if (staffListData && staffListData.length > 0) { staffListData.filter(s => String(s.IsActive).toLowerCase() === 'true').sort((a,b) => (a.Name || '').localeCompare(b.Name || '')).forEach(staff => { const opt = document.createElement('option'); opt.value = staff.StaffID; opt.textContent = `${staff.Name} (${staff.StaffID})`; selectElement.appendChild(opt); }); } }
-    function populateClassDropdowns(selectors = [D.editClassSelect, D.resultClassSelect, D.feeClassSelect, D.addStudentClassSelect, D.assignTeacherClassSelect]) { const createOption = (val, txt) => { const opt = document.createElement('option'); opt.value = val; opt.textContent = txt; return opt; }; selectors.forEach(sel => { if(sel) { const currentVal = sel.value; sel.innerHTML = '<option value="" disabled selected>-- Select Class --</option>'; const sortedClassIds = Object.keys(classMapping).sort((a,b) => (classMapping[a].displayName.localeCompare(classMapping[b].displayName))); sortedClassIds.forEach(classId => { sel.appendChild(createOption(classId, classMapping[classId].displayName)); }); if(currentVal) sel.value = currentVal; } }); }
-    function populateStaffDropdown(selectElement) { if (!selectElement) return; selectElement.innerHTML = '<option value="" disabled selected>-- Select Staff --</option>'; if (staffListData && staffListData.length > 0) { staffListData.filter(s => String(s.IsActive).toLowerCase() === 'true').sort((a,b) => (a.Name || '').localeCompare(b.Name || '')).forEach(staff => { const opt = document.createElement('option'); opt.value = staff.StaffID; opt.textContent = `${staff.Name} (${staff.StaffID})`; selectElement.appendChild(opt); }); } }
+    function populateClassDropdowns() { const createOption = (val, txt) => { const opt = document.createElement('option'); opt.value = val; opt.textContent = txt; return opt; }; const selectors = [D.editClassSelect, D.resultClassSelect, D.feeClassSelect]; selectors.forEach(sel => { if(sel) { const currentVal = sel.value; sel.innerHTML = '<option value="" disabled selected>-- Select Class --</option>'; const sortedClassIds = Object.keys(classMapping).sort((a,b) => (classMapping[a].displayName.localeCompare(classMapping[b].displayName))); sortedClassIds.forEach(classId => { sel.appendChild(createOption(classId, classMapping[classId].displayName)); }); if(currentVal) sel.value = currentVal; } }); }
     function openEditStudentModal(studentId) { hideMessage(D.editStudentMessage); const student = studentsData.find(s => String(s.StudentID) === String(studentId)); if (!student) { console.error("Student not found:", studentId); showMessage(D.studentListMessage || D.dashboardMessage, 'Student details not found.', 'error'); return; } D.editStudentForm.reset(); document.getElementById('edit-student-id').value=student.StudentID; document.getElementById('edit-rollNumber').value=student.RollNumber||''; document.getElementById('edit-name').value=student.Name||''; D.editClassSelect.value=student.Class||''; document.getElementById('edit-mobile').value=student.Mobile||''; document.getElementById('edit-gmail').value=student.Gmail||''; document.getElementById('edit-password').value=''; document.getElementById('edit-fatherName').value=student.FatherName||''; document.getElementById('edit-motherName').value=student.MotherName||''; document.getElementById('edit-address').value=student.Address||''; document.getElementById('edit-photoURL').value=student.PhotoURL||''; document.getElementById('edit-aadhar').value=student.Aadhar||''; document.getElementById('edit-gender').value=student.Gender||'Male'; openModal('editStudentModal'); }
     D.saveStudentChangesBtn.addEventListener('click', async () => { hideMessage(D.editStudentMessage); const nameIn = document.getElementById('edit-name').value.trim(); const rollIn = document.getElementById('edit-rollNumber').value.trim(); const classIdIn = D.editClassSelect.value; if(!nameIn||!rollIn||!classIdIn){showMessage(D.editStudentMessage,'Roll Number, Name, and Class are required.','error');return;} const studentId = document.getElementById('edit-student-id').value; const studentPayload = { StudentID: studentId, RollNumber: rollIn, Name: nameIn, Class: classIdIn, Mobile: document.getElementById('edit-mobile').value.trim(), Gmail: document.getElementById('edit-gmail').value.trim(), Password: document.getElementById('edit-password').value.trim() || undefined, FatherName: document.getElementById('edit-fatherName').value.trim(), MotherName: document.getElementById('edit-motherName').value.trim(), Address: document.getElementById('edit-address').value.trim(), PhotoURL: document.getElementById('edit-photoURL').value.trim(), Aadhar: document.getElementById('edit-aadhar').value.trim(), Gender: document.getElementById('edit-gender').value }; if(studentPayload.Password === undefined) delete studentPayload.Password; const result = await callBackendApi('editStudent',{ studentData: studentPayload }); if(result?.success){ showMessage(D.editStudentMessage,result.message||'Student updated successfully!','success'); await loadStudentsAndClasses(false); const displayedClassId = D.studentListMainContent.dataset.currentClassId; if(displayedClassId) displayStudentsForClass(displayedClassId); else displayClassTiles(); setTimeout(()=>closeModal('editStudentModal'),1500); } else { showMessage(D.editStudentMessage,result?.error||'Update failed. Try again.','error'); } });
     async function handleDeleteStudent(studentId, studentName) { if (!confirm(`Delete ${studentName} (ID: ${studentId})? This is permanent.`)) return; const result = await callBackendApi('deleteStudent', { studentId }); if (result?.success) { showMessage(D.studentListMessage || D.dashboardMessage, result.message || 'Student deleted.', 'success'); await loadStudentsAndClasses(false); const displayedClassId = D.studentListMainContent.dataset.currentClassId; if(displayedClassId) displayStudentsForClass(displayedClassId); else displayClassTiles(); } else { showMessage(D.studentListMessage || D.dashboardMessage, result?.error || 'Failed to delete student.', 'error'); } }
@@ -1376,258 +1236,6 @@
     });
     window.addEventListener('resize',()=>{const mt=D.sidebarToggleMobile; if(window.innerWidth<=768){mt.style.display='block';if(!D.sidebar.classList.contains('open'))D.sidebar.classList.add('collapsed');}else{mt.style.display='none';D.sidebar.classList.remove('open');D.sidebar.classList.remove('collapsed');}});
 
-    // --- Event Listeners for New Data Modals ---
-    D.saveNewStudentBtn.addEventListener('click', async () => {
-        hideMessage(D.addStudentMessage);
-        const form = D.addStudentForm;
-        const photoFile = form.querySelector('#add-photo').files[0];
-        let photoUrl = null;
-
-        const studentData = {
-            RollNumber: form.querySelector('#add-rollNumber').value.trim(),
-            Name: form.querySelector('#add-name').value.trim(),
-            Class: form.querySelector('#add-class').value,
-            Mobile: form.querySelector('#add-mobile').value.trim(),
-            Gmail: form.querySelector('#add-gmail').value.trim(),
-            Password: form.querySelector('#add-password').value.trim(),
-            FatherName: form.querySelector('#add-fatherName').value.trim(),
-            MotherName: form.querySelector('#add-motherName').value.trim(),
-            Address: form.querySelector('#add-address').value.trim(),
-            Aadhar: form.querySelector('#add-aadhar').value.trim(),
-            Gender: form.querySelector('#add-gender').value
-        };
-
-        if (!studentData.Name || !studentData.RollNumber || !studentData.Class || !studentData.Password) {
-            showMessage(D.addStudentMessage, 'Name, Roll Number, Class, and Password are required.', 'error');
-            return;
-        }
-
-        try {
-            if (photoFile) {
-                photoUrl = await uploadPhotoToGitHub(photoFile);
-            }
-            studentData.PhotoURL = photoUrl;
-
-            const result = await callBackendApi('addStudent', { studentData });
-            if (result?.success) {
-                showMessage(D.addStudentMessage, result.message || 'Student added successfully!', 'success');
-                form.reset();
-                loadStudentsAndClasses(); // Refresh student data
-                setTimeout(() => closeModal('addStudentModal'), 1500);
-            } else {
-                showMessage(D.addStudentMessage, result?.error || 'Failed to add student.', 'error');
-            }
-        } catch (error) {
-            showMessage(D.addStudentMessage, `Error: ${error.message}`, 'error');
-        }
-    });
-
-    D.saveNewStaffBtn.addEventListener('click', async () => {
-        hideMessage(D.addStaffMessage);
-        const form = D.addStaffForm;
-        const photoFile = form.querySelector('#add-staff-photo').files[0];
-        let photoUrl = null;
-
-        const staffData = {
-            Name: form.querySelector('#add-staff-name').value.trim(),
-            Mobile: form.querySelector('#add-staff-mobile').value.trim(),
-            Gmail: form.querySelector('#add-staff-gmail').value.trim(),
-            Password: form.querySelector('#add-staff-password').value.trim(),
-            SalaryAmount: form.querySelector('#add-staff-salary').value.trim(),
-        };
-
-        if (!staffData.Name || !staffData.Mobile || !staffData.Password) {
-            showMessage(D.addStaffMessage, 'Name, Mobile, and Password are required.', 'error');
-            return;
-        }
-
-        try {
-            if (photoFile) {
-                photoUrl = await uploadPhotoToGitHub(photoFile);
-            }
-            staffData.PhotoURL = photoUrl;
-
-            const result = await callBackendApi('addStaff', { staffData });
-            if (result?.success) {
-                showMessage(D.addStaffMessage, result.message || 'Staff added successfully!', 'success');
-                form.reset();
-                loadStaffList(); // Refresh staff data
-                setTimeout(() => closeModal('addStaffModal'), 1500);
-            } else {
-                showMessage(D.addStaffMessage, result?.error || 'Failed to add staff.', 'error');
-            }
-        } catch (error) {
-            showMessage(D.addStaffMessage, `Error: ${error.message}`, 'error');
-        }
-    });
-
-    D.saveNewClassBtn.addEventListener('click', async () => {
-        hideMessage(D.addClassMessage);
-        const form = D.addClassForm;
-        const classData = {
-            ClassName: form.querySelector('#add-className').value.trim(),
-            Section: form.querySelector('#add-section').value.trim()
-        };
-        if (!classData.ClassName) {
-            showMessage(D.addClassMessage, 'Class Name is required.', 'error');
-            return;
-        }
-        const result = await callBackendApi('addClass', { classData });
-        if (result?.success) {
-            showMessage(D.addClassMessage, result.message || 'Class added successfully!', 'success');
-            form.reset();
-            loadStudentsAndClasses(); // This reloads classes as well
-            setTimeout(() => closeModal('addClassModal'), 1500);
-        } else {
-            showMessage(D.addClassMessage, result?.error || 'Failed to add class.', 'error');
-        }
-    });
-
-    D.saveNewSubjectBtn.addEventListener('click', async () => {
-        hideMessage(D.addSubjectMessage);
-        const form = D.addSubjectForm;
-        const subjectData = {
-            SubjectName: form.querySelector('#add-subjectName').value.trim()
-        };
-        if (!subjectData.SubjectName) {
-            showMessage(D.addSubjectMessage, 'Subject Name is required.', 'error');
-            return;
-        }
-        const result = await callBackendApi('addSubject', { subjectData });
-        if (result?.success) {
-            showMessage(D.addSubjectMessage, result.message || 'Subject added successfully!', 'success');
-            form.reset();
-            // No specific data to reload, but could reload sheet names if needed
-            setTimeout(() => closeModal('addSubjectModal'), 1500);
-        } else {
-            showMessage(D.addSubjectMessage, result?.error || 'Failed to add subject.', 'error');
-        }
-    });
-
-    D.saveAssignTeacherBtn.addEventListener('click', async () => {
-        hideMessage(D.assignTeacherMessage);
-        const form = D.assignTeacherForm;
-        const classId = form.querySelector('#assign-teacher-class').value;
-        const staffId = form.querySelector('#assign-teacher-staff').value;
-
-        if (!classId || !staffId) {
-            showMessage(D.assignTeacherMessage, 'Both Class and Teacher must be selected.', 'error');
-            return;
-        }
-        const result = await callBackendApi('assignClassTeacher', { classId, staffId });
-        if (result?.success) {
-            showMessage(D.assignTeacherMessage, result.message || 'Class teacher assigned successfully!', 'success');
-            form.reset();
-            setTimeout(() => closeModal('assignClassTeacherModal'), 1500);
-        } else {
-            showMessage(D.assignTeacherMessage, result?.error || 'Failed to assign teacher.', 'error');
-        }
-    });
-
-    D.saveNewExpenseBtn.addEventListener('click', async () => {
-        hideMessage(D.addExpenseMessage);
-        const form = D.addExpenseForm;
-        const expenseData = {
-            Category: form.querySelector('#add-expense-category').value.trim(),
-            Description: form.querySelector('#add-expense-description').value.trim(),
-            Amount: form.querySelector('#add-expense-amount').value.trim()
-        };
-        if (!expenseData.Category || !expenseData.Amount) {
-            showMessage(D.addExpenseMessage, 'Category and Amount are required.', 'error');
-            return;
-        }
-        const result = await callBackendApi('addExpense', { expenseData });
-        if (result?.success) {
-            showMessage(D.addExpenseMessage, result.message || 'Expense added successfully!', 'success');
-            form.reset();
-            loadDashboardData(); // Refresh dashboard to show new total expenses
-            setTimeout(() => closeModal('addExpenseModal'), 1500);
-        } else {
-            showMessage(D.addExpenseMessage, result?.error || 'Failed to add expense.', 'error');
-        }
-    });
-
-    async function fetchAndDisplayCompleteData() {
-        showMessage(D.completeDataMessage, 'Fetching all data, this may take a moment...', 'info');
-        D.completeDataContainer.innerHTML = ''; // Clear previous content
-        const result = await callBackendApi('completedata_fatch', {});
-
-        if (result?.success && result.data) {
-            hideMessage(D.completeDataMessage);
-            const allData = result.data;
-            const container = D.completeDataContainer;
-            
-            if (Object.keys(allData).length === 0) {
-                container.innerHTML = '<p class="message warning">No data or sheets found in the spreadsheet.</p>';
-                return;
-            }
-
-            const frag = document.createDocumentFragment();
-
-            for (const sheetName in allData) {
-                const sheetData = allData[sheetName];
-                
-                const sheetHeader = document.createElement('h3');
-                sheetHeader.textContent = sanitizeHTML(sheetName);
-                sheetHeader.style.cssText = "margin-top: 30px; margin-bottom: 15px; padding-bottom: 10px; border-bottom: 2px solid var(--primary-color); color: var(--primary-color);";
-                frag.appendChild(sheetHeader);
-
-                if (Array.isArray(sheetData) && sheetData.length > 0) {
-                    const tableContainer = document.createElement('div');
-                    tableContainer.className = 'data-table-container';
-                    tableContainer.style.maxHeight = '50vh';
-
-                    const table = document.createElement('table');
-                    table.className = 'data-table';
-                    
-                    const thead = document.createElement('thead');
-                    const headerRow = document.createElement('tr');
-                    const headers = Object.keys(sheetData[0]);
-                    headers.forEach(headerText => {
-                        const th = document.createElement('th');
-                        th.textContent = sanitizeHTML(headerText);
-                        headerRow.appendChild(th);
-                    });
-                    thead.appendChild(headerRow);
-                    table.appendChild(thead);
-
-                    const tbody = document.createElement('tbody');
-                    sheetData.forEach(row => {
-                        const tr = document.createElement('tr');
-                        headers.forEach(header => {
-                            const td = document.createElement('td');
-                            td.textContent = sanitizeHTML(row[header]);
-                            tr.appendChild(td);
-                        });
-                        tbody.appendChild(tr);
-                    });
-                    table.appendChild(tbody);
-                    tableContainer.appendChild(table);
-                    frag.appendChild(tableContainer);
-                } else if (sheetData.error) {
-                     const errorP = document.createElement('p');
-                     errorP.className = 'message error';
-                     errorP.textContent = `Error loading ${sheetName}: ${sheetData.error}`;
-                     frag.appendChild(errorP);
-                } else {
-                    const noDataP = document.createElement('p');
-                    noDataP.className = 'message info';
-                    noDataP.textContent = `Sheet \"${sheetName}\" is empty or contains only headers.`;
-                    frag.appendChild(noDataP);
-                }
-            }
-            container.appendChild(frag);
-
-        } else {
-            showMessage(D.completeDataMessage, result?.error || 'Failed to fetch complete data.', 'error');
-        }
-    }
-
-    D.completeDataView.addEventListener('click', (e) => {
-        if (e.target && e.target.id === 'fetch-complete-data-btn') {
-            fetchAndDisplayCompleteData();
-        }
-    });
 </script>
 
 </body>
