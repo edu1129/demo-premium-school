@@ -9,9 +9,17 @@ app.use(express.json());
 const PORT = process.env.PORT || 3000;
 const GAS_URL = process.env.GAS_URL;
 
+const GITHUB_API_TOKEN = process.env.GITHUB_API_TOKEN;
+const GITHUB_OWNER = process.env.GITHUB_OWNER;
+const GITHUB_REPO = process.env.GITHUB_REPO;
+
 if (!GAS_URL) {
   console.error("FATAL ERROR: GAS_URL environment variable is not set.");
   process.exit(1);
+}
+
+if (!GITHUB_API_TOKEN || !GITHUB_OWNER || !GITHUB_REPO) {
+  console.warn("WARNING: GitHub environment variables (GITHUB_API_TOKEN, GITHUB_OWNER, GITHUB_REPO) are not set. Image uploads will fail.");
 }
 
 async function processImageUrlsToBase64(data) {
@@ -123,6 +131,48 @@ app.post('/login', async (req, res) => {
   }
 });
 
+app.post('/upload-image', async (req, res) => {
+  if (!GITHUB_API_TOKEN || !GITHUB_OWNER || !GITHUB_REPO) {
+    return res.status(500).json({ success: false, error: "GitHub integration is not configured on the server." });
+  }
+  
+  const { image, fileName } = req.body;
+  if (!image || !fileName) {
+    return res.status(400).json({ success: false, error: 'Image data and file name are required.' });
+  }
+  
+  const sanitizedFileName = `${new Date().getTime()}-${fileName.replace(/[^a-zA-Z0-9.\-]/g, '_')}`;
+  const filePath = `images/${sanitizedFileName}`;
+  const GITHUB_API_URL = `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${filePath}`;
+  
+  try {
+    const githubResponse = await fetch(GITHUB_API_URL, {
+      method: 'PUT',
+      headers: {
+        'Authorization': `token ${GITHUB_API_TOKEN}`,
+        'Content-Type': 'application/json',
+        'Accept': 'application/vnd.github.v3+json'
+      },
+      body: JSON.stringify({
+        message: `Upload image: ${sanitizedFileName}`,
+        content: image
+      })
+    });
+    
+    const result = await githubResponse.json();
+    
+    if (githubResponse.ok && result.content?.download_url) {
+      res.status(200).json({ success: true, url: result.content.download_url });
+    } else {
+      console.error('GitHub API Error:', result.message || 'Unknown error');
+      res.status(githubResponse.status || 502).json({ success: false, error: `GitHub API Error: ${result.message || 'Failed to upload file.'}` });
+    }
+  } catch (error) {
+    console.error('Proxy error during image upload:', error);
+    res.status(500).json({ success: false, error: 'Server error during image upload.', details: error.message });
+  }
+});
+
 app.post('/api/:action', async (req, res) => {
   const action = req.params.action;
   const payload = req.body || {};
@@ -155,7 +205,7 @@ app.post('/api/:action', async (req, res) => {
     }
     
     if (gasResponse.ok && result.success && result.data) {
-      await processImageUrlsToBase64(result.data);
+     // await processImageUrlsToBase64(result.data);
     }
     
     res.status(200).json(result);
