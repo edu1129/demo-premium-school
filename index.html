@@ -886,12 +886,6 @@
 
     };
 
-    const GITHUB_CONFIG = {
-        token: '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',
-        owner: 'edu1129',
-        repo: 'Hhhhh'
-    };
-
     // --- Utility Functions ---
     const showLoading = () => D.loadingOverlay.classList.add('show');
     const hideLoading = () => D.loadingOverlay.classList.remove('show');
@@ -1154,38 +1148,34 @@
 
     async function uploadImageToGitHub(file, msgEl) {
         showLoading();
-        showMessage(msgEl, "Uploading image to GitHub...", 'info', false);
-        const fileName = `${new Date().getTime()}-${file.name.replace(/[^a-zA-Z0-9.\-]/g, '_')}`;
-        const filePath = `images/${fileName}`;
+        showMessage(msgEl, "Uploading image...", 'info', false);
         
         return new Promise((resolve) => {
             const reader = new FileReader();
             reader.onload = async () => {
                 const contentBase64 = reader.result.split(',')[1];
-                const GITHUB_API_URL = `https://api.github.com/repos/${GITHUB_CONFIG.owner}/${GITHUB_CONFIG.repo}/contents/${filePath}`;
                 try {
-                    const response = await fetch(GITHUB_API_URL, {
-                        method: 'PUT',
+                    const response = await fetch('/upload-image', {
+                        method: 'POST',
                         headers: {
-                            'Authorization': `token ${GITHUB_CONFIG.token}`,
                             'Content-Type': 'application/json'
                         },
                         body: JSON.stringify({
-                            message: `Upload image: ${fileName}`,
-                            content: contentBase64
+                            image: contentBase64,
+                            fileName: file.name
                         })
                     });
                     const result = await response.json();
                     hideLoading();
-                    if (response.ok && result.content?.download_url) {
+                    if (response.ok && result.success && result.url) {
                         showMessage(msgEl, "Image uploaded!", 'success');
-                        resolve(result.content.download_url);
+                        resolve(result.url);
                     } else {
-                        throw new Error(result.message || "Failed to upload to GitHub.");
+                        throw new Error(result.error || "Failed to upload image via server.");
                     }
                 } catch (error) {
                     hideLoading();
-                    console.error('GitHub Upload Error:', error);
+                    console.error('Image Upload Error:', error);
                     showMessage(msgEl, `Image upload failed: ${error.message}`, 'error');
                     resolve('');
                 }
