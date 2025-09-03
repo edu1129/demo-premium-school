@@ -391,90 +391,6 @@
         .profile-main-content .mark-paid-btn:hover { background-color: var(--secondary-color-dark); transform: translateY(-2px); box-shadow: var(--shadow-sm);}
         #staffDetailsModal .profile-main-content #add-salary-form-modal { margin-top:25px; padding-top:25px; border-top:1px solid #eee;} 
 
-        /* Fee Records Table in Profile Modal */
-        .fee-records-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 15px;
-        }
-        .fee-records-table th, .fee-records-table td {
-            padding: 12px 15px;
-            text-align: left;
-            border-bottom: 1px solid var(--border-color);
-        }
-        .fee-records-table th {
-            background-color: #f8fafc;
-            font-weight: 600;
-            color: var(--primary-color);
-            font-size: 0.9rem;
-            text-transform: uppercase;
-        }
-        .fee-records-table tbody tr:hover {
-            background-color: #fcfdff;
-        }
-        .fee-records-table .status-due {
-            color: var(--error-color);
-            font-weight: 500;
-            background-color: rgba(208, 2, 27, 0.1);
-            padding: 4px 10px;
-            border-radius: 15px;
-            font-size: 0.85rem;
-            display: inline-block;
-        }
-        .fee-records-table .status-paid {
-            color: var(--success-color);
-            font-weight: 500;
-            background-color: rgba(126, 211, 33, 0.1);
-            padding: 4px 10px;
-            border-radius: 15px;
-            font-size: 0.85rem;
-            display: inline-block;
-        }
-        .fee-records-table .mark-paid-btn {
-            padding: 6px 12px;
-            font-size: 0.85rem;
-        }
-        .fee-records-table .amount {
-            font-weight: 600;
-            color: var(--text-color);
-        }
-        .fee-records-table td:last-child {
-            text-align: right;
-        }
-        .fee-records-tabs {
-            display: flex;
-            gap: 5px;
-            border-bottom: 2px solid var(--border-color);
-            margin-bottom: 15px;
-        }
-        .fee-records-tab {
-            padding: 10px 18px;
-            cursor: pointer;
-            border: none;
-            background-color: transparent;
-            font-size: 1rem;
-            font-weight: 500;
-            color: var(--text-light-color);
-            border-bottom: 3px solid transparent;
-            transition: all var(--transition-fast);
-            position: relative;
-            top: 2px;
-        }
-        .fee-records-tab:hover {
-            color: var(--primary-color);
-        }
-        .fee-records-tab.active {
-            color: var(--primary-color);
-            border-bottom-color: var(--primary-color);
-        }
-        .fee-tab-content {
-            display: none;
-        }
-        .fee-tab-content.active {
-            display: block;
-            animation: fadeInUpView 0.4s ease forwards;
-        }
-
         /* Responsive Adjustments */
         @media (max-width: 992px) { 
              .profile-grid { grid-template-columns: 1fr; }
@@ -970,12 +886,6 @@
 
     };
 
-    const GITHUB_CONFIG = {
-        token: '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',
-        owner: 'edu1129',
-        repo: 'Hhhhh'
-    };
-
     // --- Utility Functions ---
     const showLoading = () => D.loadingOverlay.classList.add('show');
     const hideLoading = () => D.loadingOverlay.classList.remove('show');
@@ -1211,119 +1121,8 @@
     D.saveStudentChangesBtn.addEventListener('click', async () => { hideMessage(D.editStudentMessage); const nameIn = document.getElementById('edit-name').value.trim(); const rollIn = document.getElementById('edit-rollNumber').value.trim(); const classIdIn = D.editClassSelect.value; if(!nameIn||!rollIn||!classIdIn){showMessage(D.editStudentMessage,'Roll Number, Name, and Class are required.','error');return;} const studentId = document.getElementById('edit-student-id').value; const studentPayload = { StudentID: studentId, RollNumber: rollIn, Name: nameIn, Class: classIdIn, Mobile: document.getElementById('edit-mobile').value.trim(), Gmail: document.getElementById('edit-gmail').value.trim(), Password: document.getElementById('edit-password').value.trim() || undefined, FatherName: document.getElementById('edit-fatherName').value.trim(), MotherName: document.getElementById('edit-motherName').value.trim(), Address: document.getElementById('edit-address').value.trim(), PhotoURL: document.getElementById('edit-photoURL').value.trim(), Aadhar: document.getElementById('edit-aadhar').value.trim(), Gender: document.getElementById('edit-gender').value }; if(studentPayload.Password === undefined) delete studentPayload.Password; const result = await callBackendApi('editStudent',{ studentData: studentPayload }); if(result?.success){ showMessage(D.editStudentMessage,result.message,'success'); await loadStudentsAndClasses(false); const displayedClassId = D.studentListMainContent.dataset.currentClassId; if(displayedClassId) displayStudentsForClass(displayedClassId); else displayClassTiles(); setTimeout(()=>closeModal('editStudentModal'),1500); } else { showMessage(D.editStudentMessage,result?.error,'error'); } });
     async function handleDeleteStudent(studentId, studentName) { if (!confirm(`Delete ${studentName} (ID: ${studentId})? This is permanent.`)) return; const result = await callBackendApi('deleteStudent', { studentId }); if (result?.success) { showMessage(D.studentListMessage || D.dashboardMessage, result.message, 'success'); await loadStudentsAndClasses(false); const displayedClassId = D.studentListMainContent.dataset.currentClassId; if(displayedClassId) displayStudentsForClass(displayedClassId); else displayClassTiles(); } else { showMessage(D.studentListMessage, result?.error, 'error'); } }
     
-    async function openStudentDetailsModal(studentId) { D.studentDetailsModalBody.innerHTML = '<p class="message info">Loading student details...</p>'; openModal('studentDetailsModal'); const result = await callBackendApi('getStudentFullDetails', { studentId }); if (result?.success && result.data) { const S = result.data; D.studentDetailsModalTitle.innerHTML = `<i class="fas fa-user-check"></i> Profile: ${sanitizeHTML(S.Name || 'Student')}`; let feeDetailsHtml = '<h4><i class="fas fa-coins"></i> Fee Records</h4>';
-            if (S.fees) {
-                feeDetailsHtml += `<div class="fees-summary">Total Due: <strong>${formatCurrency(S.fees.totalDue)}</strong> &nbsp;|&nbsp; Total Paid: <strong>${formatCurrency(S.fees.totalPaid)}</strong></div>`;
-
-                // Tabs
-                feeDetailsHtml += `<div class="fee-records-tabs">
-                    <button class="fee-records-tab active" data-tab="due">Due Fees</button>
-                    <button class="fee-records-tab" data-tab="paid">Paid History</button>
-                    <button class="fee-records-tab" data-tab="summary">Monthly Summary</button>
-                </div>`;
-
-                // Due Fees Tab Content
-                feeDetailsHtml += `<div id="fee-tab-due" class="fee-tab-content active">`;
-                if (S.fees.due?.length > 0) {
-                    feeDetailsHtml += `<table class="fee-records-table"><thead><tr><th>Fee Type</th><th>Due Date</th><th>Amount</th><th>Status</th><th>Action</th></tr></thead><tbody>`;
-                    S.fees.due.forEach(f => {
-                        feeDetailsHtml += `<tr data-fee-record-id="${sanitizeHTML(f.FeeRecordID)}">
-                            <td>${sanitizeHTML(f.FeeTypeName || f.FeeTypeID)}</td>
-                            <td>${formatDisplayDate(f.DueDate)}</td>
-                            <td class="amount">${formatCurrency(f.Amount)}</td>
-                            <td><span class="status-due">${sanitizeHTML(f.Status)}</span></td>
-                            <td><button class="mark-paid-btn" data-student-id="${sanitizeHTML(S.StudentID)}"><i class="fas fa-check-circle"></i> Mark Paid</button></td>
-                        </tr>`;
-                    });
-                    feeDetailsHtml += `</tbody></table>`;
-                } else {
-                    feeDetailsHtml += '<p style="text-align:center; color:var(--text-light-color); margin-top:20px; padding: 15px 0;">No outstanding due fees.</p>';
-                }
-                feeDetailsHtml += `</div>`;
-
-                // Paid History Tab Content
-                feeDetailsHtml += `<div id="fee-tab-paid" class="fee-tab-content">`;
-                if (S.fees.paid?.length > 0) {
-                    feeDetailsHtml += `<table class="fee-records-table"><thead><tr><th>Fee Type</th><th>Paid Date</th><th>Amount</th></tr></thead><tbody>`;
-                    S.fees.paid.forEach(f => {
-                        feeDetailsHtml += `<tr>
-                            <td>${sanitizeHTML(f.FeeTypeName || f.FeeTypeID)}</td>
-                            <td>${formatDisplayDate(f.PaidDate)}</td>
-                            <td class="amount status-paid">${formatCurrency(f.Amount)}</td>
-                        </tr>`;
-                    });
-                    feeDetailsHtml += `</tbody></table>`;
-                } else {
-                    feeDetailsHtml += '<p style="text-align:center; color:var(--text-light-color); margin-top:20px; padding: 15px 0;">No paid fee records found.</p>';
-                }
-                feeDetailsHtml += `</div>`;
-
-                // Monthly Summary Tab Content
-                feeDetailsHtml += `<div id="fee-tab-summary" class="fee-tab-content">`;
-                if (Object.keys(S.fees.byMonth || {}).length > 0) {
-                    feeDetailsHtml += `<table class="fee-records-table"><thead><tr><th>Month</th><th>Total Paid</th></tr></thead><tbody>`;
-                    for (const month in S.fees.byMonth) {
-                        feeDetailsHtml += `<tr>
-                            <td>${sanitizeHTML(month)}</td>
-                            <td class="amount">${formatCurrency(S.fees.byMonth[month])}</td>
-                        </tr>`;
-                    }
-                    feeDetailsHtml += `</tbody></table>`;
-                } else {
-                    feeDetailsHtml += '<p style="text-align:center; color:var(--text-light-color); margin-top:20px; padding: 15px 0;">No monthly summary data available.</p>';
-                }
-                feeDetailsHtml += `</div>`;
-
-            } else {
-                feeDetailsHtml += '<p>Fee data not available.</p>';
-            } let attendanceDetailsHtml = '<h4><i class="fas fa-user-clock"></i> Attendance Records</h4>'; if (S.attendance) { attendanceDetailsHtml += `<div class="attendance-summary">Total Present: <strong>${S.attendance.totalPresent}</strong> &nbsp;|&nbsp; Total Absent: <strong>${S.attendance.totalAbsent}</strong> (out of ${S.attendance.totalSchoolDaysForStudent} school days)</div><div class="details-list">`; if (Object.keys(S.attendance.byMonth || {}).length > 0) { for (const month in S.attendance.byMonth) { const monthData = S.attendance.byMonth[month]; const percentage = monthData.schoolDays > 0 ? ((monthData.present / monthData.schoolDays) * 100).toFixed(1) : 0; attendanceDetailsHtml += `<div class="list-item"><span>${sanitizeHTML(month)}: ${monthData.present}P, ${monthData.absent}A (${percentage}%)</span></div>`; } } else if(S.attendance.records?.length > 0){ attendanceDetailsHtml += '<p style="font-size:0.9em; color:#666;">Showing recent individual records (up to 10):</p>'; S.attendance.records.slice(-10).reverse().forEach(att => { attendanceDetailsHtml += `<div class="list-item"><span>${formatDisplayDate(att.Date)}: <strong>${sanitizeHTML(att.Status)}</strong></span></div>`; }); } else { attendanceDetailsHtml += '<p style="text-align:center; color:var(--text-light-color); margin-top:10px;">No attendance records found.</p>'; } attendanceDetailsHtml += '</div>'; } else { attendanceDetailsHtml += '<p>Attendance data not available.</p>'; } D.studentDetailsModalBody.innerHTML = `<div class="profile-grid"><div class="profile-sidebar"><div class="profile-photo-container">${getStudentPhotoHtml(S.PhotoURL, 'profile-photo')}</div><h3 class="profile-name">${sanitizeHTML(S.Name)}</h3><p class="profile-meta"><i class="fas fa-id-badge"></i> ID: ${sanitizeHTML(S.StudentID)}</p><p class="profile-meta"><i class="fas fa-chalkboard"></i> Class: ${sanitizeHTML(S.ClassNameWithSection || S.Class)}</p><p class="profile-meta"><i class="fas fa-list-ol"></i> Roll: ${sanitizeHTML(S.RollNumber || 'N/A')}</p><p class="profile-meta"><i class="fas fa-venus-mars"></i> Gender: ${sanitizeHTML(S.Gender || 'N/A')}</p><p class="profile-meta"><i class="fas fa-calendar-alt"></i> Reg. Date: ${formatDisplayDate(S.RegistrationDate)}</p></div><div class="profile-main-content"><div class="details-section"><h4><i class="fas fa-user-friends"></i> Family & Contact</h4><div class="info-grid"><p><strong>Father:</strong> ${sanitizeHTML(S.FatherName)}</p><p><strong>Mother:</strong> ${sanitizeHTML(S.MotherName)}</p><p><strong>Mobile:</strong> ${sanitizeHTML(S.Mobile)}</p><p><strong>Gmail:</strong> ${sanitizeHTML(S.Gmail)}</p><p><strong>Address:</strong> ${sanitizeHTML(S.Address)}</p><p><strong>Aadhar:</strong> ${sanitizeHTML(S.Aadhar)}</p></div></div><div class="details-section fees-section">${feeDetailsHtml}</div><div class="details-section attendance-section">${attendanceDetailsHtml}</div></div></div>`; } else { D.studentDetailsModalBody.innerHTML = `<p class="message error">${result?.error || 'Failed to load student details.'}</p>`; } }
-    D.studentDetailsModalBody.addEventListener('click', async (e) => {
-        // Handle tab switching
-        if (e.target.classList.contains('fee-records-tab')) {
-            const tabButton = e.target;
-            const tabContainer = tabButton.closest('.details-section');
-            if (!tabContainer) return;
-
-            tabContainer.querySelector('.fee-records-tab.active')?.classList.remove('active');
-            tabContainer.querySelector('.fee-tab-content.active')?.classList.remove('active');
-
-            tabButton.classList.add('active');
-            const tabContentId = `fee-tab-${tabButton.dataset.tab}`;
-            const newContent = tabContainer.querySelector(`#${tabContentId}`);
-            if (newContent) newContent.classList.add('active');
-        }
-
-        // Handle "Mark Paid" button click
-        if (e.target.classList.contains('mark-paid-btn') || e.target.closest('.mark-paid-btn')) {
-            const button = e.target.closest('.mark-paid-btn');
-            const feeRecordId = button.closest('tr').dataset.feeRecordId; // Changed from .list-item to tr
-            const studentId = button.dataset.studentId;
-            if (!feeRecordId || !studentId) {
-                const feeMsgContainer = D.studentDetailsModalBody.querySelector('.fees-section');
-                const tempMsg = document.createElement('div');
-                if (feeMsgContainer) feeMsgContainer.prepend(tempMsg);
-                showMessage(tempMsg || D.studentDetailsModalBody, "Error: Fee Record ID missing.", "error", false);
-                return;
-            }
-            const paidDate = prompt("Enter Paid Date (YYYY-MM-DD):", new Date().toISOString().split('T')[0]);
-            if (paidDate) {
-                try { new Date(paidDate).toISOString(); } catch { alert("Invalid date format!"); return; }
-                const result = await callBackendApi('updateStudentFeeStatus', { feeRecordId, newStatus: 'Paid', paidDate });
-                if (result?.success) {
-                    const feeMsgContainer = D.studentDetailsModalBody.querySelector('.fees-section');
-                    const tempMsg = document.createElement('div');
-                    if (feeMsgContainer) feeMsgContainer.prepend(tempMsg);
-                    showMessage(tempMsg, result.message, 'success', true);
-                    openStudentDetailsModal(studentId);
-                } else {
-                    const feeMsgContainer = D.studentDetailsModalBody.querySelector('.fees-section');
-                    const tempMsg = document.createElement('div');
-                    if (feeMsgContainer) feeMsgContainer.prepend(tempMsg);
-                    showMessage(tempMsg, result?.error, 'error', false);
-                }
-            }
-        }
-    });
+    async function openStudentDetailsModal(studentId) { D.studentDetailsModalBody.innerHTML = '<p class="message info">Loading student details...</p>'; openModal('studentDetailsModal'); const result = await callBackendApi('getStudentFullDetails', { studentId }); if (result?.success && result.data) { const S = result.data; D.studentDetailsModalTitle.innerHTML = `<i class="fas fa-user-check"></i> Profile: ${sanitizeHTML(S.Name || 'Student')}`; let feeDetailsHtml = '<h4><i class="fas fa-coins"></i> Fee Records</h4>'; if (S.fees) { feeDetailsHtml += `<div class="fees-summary">Total Due: <strong>${formatCurrency(S.fees.totalDue)}</strong> &nbsp;|&nbsp; Total Paid: <strong>${formatCurrency(S.fees.totalPaid)}</strong></div><div class="details-list">`; if (S.fees.due?.length > 0) { S.fees.due.forEach(f => { feeDetailsHtml += `<div class="list-item" data-fee-record-id="${sanitizeHTML(f.FeeRecordID)}"><span>${sanitizeHTML(f.FeeTypeName || f.FeeTypeID)} (${formatDisplayDate(f.DueDate)}): <strong class="amount">${formatCurrency(f.Amount)}</strong> - <span class="status-due">${sanitizeHTML(f.Status)}</span></span><button class="mark-paid-btn" data-student-id="${sanitizeHTML(S.StudentID)}"><i class="fas fa-check-circle"></i> Mark Paid</button></div>`; }); } else { feeDetailsHtml += '<p style="text-align:center; color:var(--text-light-color); margin-top:10px;">No outstanding due fees.</p>'; } feeDetailsHtml += '</div><h5 style="margin-top:15px; font-size:1rem; color:var(--text-light-color);">Paid History:</h5><div class="details-list">'; if (S.fees.paid?.length > 0) { S.fees.paid.forEach(f => { feeDetailsHtml += `<div class="list-item"><span>${sanitizeHTML(f.FeeTypeName || f.FeeTypeID)} (${formatDisplayDate(f.PaidDate)}): <strong class="amount status-paid">${formatCurrency(f.Amount)}</strong></span></div>`; }); } else { feeDetailsHtml += '<p style="text-align:center; color:var(--text-light-color); margin-top:10px;">No paid fee records.</p>'; } feeDetailsHtml += '</div>'; if (Object.keys(S.fees.byMonth || {}).length > 0) { feeDetailsHtml += '<h5 style="margin-top:15px; font-size:1rem; color:var(--text-light-color);">Fees Paid (Monthly Summary):</h5><div class="details-list">'; for (const month in S.fees.byMonth) { feeDetailsHtml += `<div class="list-item"><span>${sanitizeHTML(month)}: <strong>${formatCurrency(S.fees.byMonth[month])}</strong></span></div>`; } feeDetailsHtml += '</div>'; } } else { feeDetailsHtml += '<p>Fee data not available.</p>'; } let attendanceDetailsHtml = '<h4><i class="fas fa-user-clock"></i> Attendance Records</h4>'; if (S.attendance) { attendanceDetailsHtml += `<div class="attendance-summary">Total Present: <strong>${S.attendance.totalPresent}</strong> &nbsp;|&nbsp; Total Absent: <strong>${S.attendance.totalAbsent}</strong> (out of ${S.attendance.totalSchoolDaysForStudent} school days)</div><div class="details-list">`; if (Object.keys(S.attendance.byMonth || {}).length > 0) { for (const month in S.attendance.byMonth) { const monthData = S.attendance.byMonth[month]; const percentage = monthData.schoolDays > 0 ? ((monthData.present / monthData.schoolDays) * 100).toFixed(1) : 0; attendanceDetailsHtml += `<div class="list-item"><span>${sanitizeHTML(month)}: ${monthData.present}P, ${monthData.absent}A (${percentage}%)</span></div>`; } } else if(S.attendance.records?.length > 0){ attendanceDetailsHtml += '<p style="font-size:0.9em; color:#666;">Showing recent individual records (up to 10):</p>'; S.attendance.records.slice(-10).reverse().forEach(att => { attendanceDetailsHtml += `<div class="list-item"><span>${formatDisplayDate(att.Date)}: <strong>${sanitizeHTML(att.Status)}</strong></span></div>`; }); } else { attendanceDetailsHtml += '<p style="text-align:center; color:var(--text-light-color); margin-top:10px;">No attendance records found.</p>'; } attendanceDetailsHtml += '</div>'; } else { attendanceDetailsHtml += '<p>Attendance data not available.</p>'; } D.studentDetailsModalBody.innerHTML = `<div class="profile-grid"><div class="profile-sidebar"><div class="profile-photo-container">${getStudentPhotoHtml(S.PhotoURL, 'profile-photo')}</div><h3 class="profile-name">${sanitizeHTML(S.Name)}</h3><p class="profile-meta"><i class="fas fa-id-badge"></i> ID: ${sanitizeHTML(S.StudentID)}</p><p class="profile-meta"><i class="fas fa-chalkboard"></i> Class: ${sanitizeHTML(S.ClassNameWithSection || S.Class)}</p><p class="profile-meta"><i class="fas fa-list-ol"></i> Roll: ${sanitizeHTML(S.RollNumber || 'N/A')}</p><p class="profile-meta"><i class="fas fa-venus-mars"></i> Gender: ${sanitizeHTML(S.Gender || 'N/A')}</p><p class="profile-meta"><i class="fas fa-calendar-alt"></i> Reg. Date: ${formatDisplayDate(S.RegistrationDate)}</p></div><div class="profile-main-content"><div class="details-section"><h4><i class="fas fa-user-friends"></i> Family & Contact</h4><div class="info-grid"><p><strong>Father:</strong> ${sanitizeHTML(S.FatherName)}</p><p><strong>Mother:</strong> ${sanitizeHTML(S.MotherName)}</p><p><strong>Mobile:</strong> ${sanitizeHTML(S.Mobile)}</p><p><strong>Gmail:</strong> ${sanitizeHTML(S.Gmail)}</p><p><strong>Address:</strong> ${sanitizeHTML(S.Address)}</p><p><strong>Aadhar:</strong> ${sanitizeHTML(S.Aadhar)}</p></div></div><div class="details-section fees-section">${feeDetailsHtml}</div><div class="details-section attendance-section">${attendanceDetailsHtml}</div></div></div>`; } else { D.studentDetailsModalBody.innerHTML = `<p class="message error">${result?.error || 'Failed to load student details.'}</p>`; } }
+    D.studentDetailsModalBody.addEventListener('click', async (e) => { if (e.target.classList.contains('mark-paid-btn') || e.target.closest('.mark-paid-btn')) { const button = e.target.closest('.mark-paid-btn'); const feeRecordId = button.closest('.list-item').dataset.feeRecordId; const studentId = button.dataset.studentId; if (!feeRecordId || !studentId) { const feeMsgContainer = D.studentDetailsModalBody.querySelector('.fees-section'); const tempMsg = document.createElement('div'); if (feeMsgContainer) feeMsgContainer.prepend(tempMsg); showMessage(tempMsg || D.studentDetailsModalBody, "Error: Fee Record ID missing.", "error", false); return; } const paidDate = prompt("Enter Paid Date (YYYY-MM-DD):", new Date().toISOString().split('T')[0]); if (paidDate) { try { new Date(paidDate).toISOString(); } catch { alert("Invalid date format!"); return; } const result = await callBackendApi('updateStudentFeeStatus', { feeRecordId, newStatus: 'Paid', paidDate }); if (result?.success) { const feeMsgContainer = D.studentDetailsModalBody.querySelector('.fees-section'); const tempMsg = document.createElement('div'); if (feeMsgContainer) feeMsgContainer.prepend(tempMsg); showMessage(tempMsg, result.message, 'success', true); openStudentDetailsModal(studentId); } else { const feeMsgContainer = D.studentDetailsModalBody.querySelector('.fees-section'); const tempMsg = document.createElement('div'); if (feeMsgContainer) feeMsgContainer.prepend(tempMsg); showMessage(tempMsg, result?.error, 'error', false); } } } });
 
     // New Add Forms JS
     function prepareAddStudentForm(){ D.addStudentForm.reset(); populateClassDropdowns([D.addStudentClassSelect]); }
@@ -1349,38 +1148,34 @@
 
     async function uploadImageToGitHub(file, msgEl) {
         showLoading();
-        showMessage(msgEl, "Uploading image to GitHub...", 'info', false);
-        const fileName = `${new Date().getTime()}-${file.name.replace(/[^a-zA-Z0-9.\-]/g, '_')}`;
-        const filePath = `images/${fileName}`;
+        showMessage(msgEl, "Uploading image...", 'info', false);
         
         return new Promise((resolve) => {
             const reader = new FileReader();
             reader.onload = async () => {
                 const contentBase64 = reader.result.split(',')[1];
-                const GITHUB_API_URL = `https://api.github.com/repos/${GITHUB_CONFIG.owner}/${GITHUB_CONFIG.repo}/contents/${filePath}`;
                 try {
-                    const response = await fetch(GITHUB_API_URL, {
-                        method: 'PUT',
+                    const response = await fetch('/upload-image', {
+                        method: 'POST',
                         headers: {
-                            'Authorization': `token ${GITHUB_CONFIG.token}`,
                             'Content-Type': 'application/json'
                         },
                         body: JSON.stringify({
-                            message: `Upload image: ${fileName}`,
-                            content: contentBase64
+                            image: contentBase64,
+                            fileName: file.name
                         })
                     });
                     const result = await response.json();
                     hideLoading();
-                    if (response.ok && result.content?.download_url) {
+                    if (response.ok && result.success && result.url) {
                         showMessage(msgEl, "Image uploaded!", 'success');
-                        resolve(result.content.download_url);
+                        resolve(result.url);
                     } else {
-                        throw new Error(result.message || "Failed to upload to GitHub.");
+                        throw new Error(result.error || "Failed to upload image via server.");
                     }
                 } catch (error) {
                     hideLoading();
-                    console.error('GitHub Upload Error:', error);
+                    console.error('Image Upload Error:', error);
                     showMessage(msgEl, `Image upload failed: ${error.message}`, 'error');
                     resolve('');
                 }
