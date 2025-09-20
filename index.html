@@ -975,9 +975,6 @@
         assignTeacherStaffSelect: document.getElementById('assign-teacher-staff'),
 
     };
-        inquiryStudentsView: document.getElementById('inquiry-students-view'),
-        inquiryListMainContent: document.getElementById('inquiry-list-main-content'),
-        inquiryListMessage: document.getElementById('inquiry-list-message'),
 
     const GITHUB_CONFIG = {
         token: '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',
@@ -1443,168 +1440,10 @@
     D.genericTableBody.addEventListener('click',(e)=>{ if(e.target?.classList.contains('edit-btn-generic')){const sn=e.target.dataset.sheetName,ri=e.target.dataset.rowIndex;if(sn&&ri)openGenericEditModal(sn,parseInt(ri));} if(e.target?.classList.contains('generic-delete-btn')){const sn=e.target.dataset.sheetName,ri=e.target.dataset.rowIndex;if(sn&&ri)handleGenericDeleteRow(sn,parseInt(ri));}});
     function openGenericEditModal(sheetName, rowIndex) { hideMessage(D.genericEditMessage); D.genericEditForm.reset(); D.genericEditFormFields.innerHTML='<p>Loading...</p>'; const rowData=currentGenericData.find(i=>i.rowIndex===rowIndex); if(!rowData||!currentGenericHeaders||currentGenericHeaders.length===0){ showMessage(D.genericSheetMessage,'Error: Headers missing or data not found.','error'); return;} D.genericEditModalTitle.innerHTML=`<i class="fas fa-edit"></i> Edit Row ${rowIndex} in "${sanitizeHTML(sheetName)}"`; D.genericEditSheetNameInput.value=sheetName; D.genericEditRowIndexInput.value=rowIndex; const frag=document.createDocumentFragment(); currentGenericHeaders.forEach((h,idx)=>{ const v=rowData.values[idx] ?? ''; const ig=document.createElement('div'); ig.className='input-group'; const lbl=document.createElement('label'); const id=`gen-edit-${h.replace(/[^a-zA-Z0-9]/g,'-')}-${rowIndex}`; lbl.htmlFor=id; lbl.textContent=sanitizeHTML(h)+':'; let inp; if(String(v).length>100||String(v).includes('\n')){inp=document.createElement('textarea');}else{inp=document.createElement('input');inp.type='text';} inp.id=id; inp.name=h; inp.value=v; ig.appendChild(lbl); ig.appendChild(inp); frag.appendChild(ig); }); D.genericEditFormFields.innerHTML=''; D.genericEditFormFields.appendChild(frag); openModal('genericEditModal');}
     D.saveGenericChangesBtn.addEventListener('click', async () => { hideMessage(D.genericEditMessage); const sheetName=D.genericEditSheetNameInput.value,rowIndex=D.genericEditRowIndexInput.value; if(!sheetName||!rowIndex){showMessage(D.genericEditMessage,'Error: Sheet/Row ID missing.','error');return;} const formD=new FormData(D.genericEditForm); const data={}; currentGenericHeaders.forEach(h=>{if(formD.has(h))data[h]=formD.get(h);}); const result=await callBackendApi('updateSheetRow',{sheetName:sheetName,rowIndex:parseInt(rowIndex),rowData:data}); if(result?.success){showMessage(D.genericEditMessage,result.message,'success');loadGenericSheetData(sheetName); setTimeout(()=>closeModal('genericEditModal'),1500);}else{showMessage(D.genericEditMessage,result?.error,'error');}});
-    async function handleGenericDeleteRow(sheetName, rowIndex) { if (!confirm(`Delete row ${rowIndex} from sheet "${sheetName}"? This is permanent.`)) return; const result = await callBackendApi('deleteSheetRow', { sheetName, rowIndex });     const isFromInquiryView = currentView === 'inquiry-students-view' && sheetName === 'InquiryStudents';
-    const msgEl = isFromInquiryView ? D.inquiryListMessage : D.genericSheetMessage;
-
-    if (result?.success) { 
-        showMessage(msgEl, result.message, 'success'); 
-        if (isFromInquiryView) {
-            loadInquiryData();
-        } else {
-            loadGenericSheetData(sheetName); 
-        }
-    } else { 
-        showMessage(msgEl, result?.error, 'error'); 
-    } }
+    async function handleGenericDeleteRow(sheetName, rowIndex) { if (!confirm(`Delete row ${rowIndex} from sheet "${sheetName}"? This is permanent.`)) return; const result = await callBackendApi('deleteSheetRow', { sheetName, rowIndex }); if (result?.success) { showMessage(D.genericSheetMessage, result.message, 'success'); loadGenericSheetData(sheetName); } else { showMessage(D.genericSheetMessage, result?.error, 'error'); } }
     D.downloadSheetJsonBtn.addEventListener('click', async () => { if (!currentGenericSheetName) { showMessage(D.genericSheetMessage, 'No sheet selected.', 'warning'); return; } const result = await callBackendApi('getSheetDataAsJson', { sheetName: currentGenericSheetName }); if (result?.success && result.data) { const jsonStr = JSON.stringify(result.data, null, 2); const blob = new Blob([jsonStr], { type: 'application/json' }); const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href = url; a.download = `${currentGenericSheetName.replace(/ /g, '_')}_export.json`; document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(url); showMessage(D.genericSheetMessage, 'JSON downloaded.', 'success'); } else { showMessage(D.genericSheetMessage, result?.error, 'error'); } });
     
     async function loadTools() {
-    D.inquiryListMainContent.addEventListener('click', (e) => {
-        const approveBtn = e.target.closest('.approve-btn');
-        const editBtn = e.target.closest('.edit-btn-generic');
-        const deleteBtn = e.target.closest('.generic-delete-btn');
-
-        if (approveBtn) {
-            const tr = approveBtn.closest('tr');
-            if (tr) {
-                const inquiryData = JSON.parse(tr.dataset.inquiryData);
-                const rowIndex = tr.dataset.rowIndex;
-                handleApproveInquiry(inquiryData, rowIndex);
-            }
-        } else if (editBtn) {
-            const sn = editBtn.dataset.sheetName;
-            const ri = editBtn.dataset.rowIndex;
-            if (sn === 'InquiryStudents' && ri) {
-                currentGenericHeaders = inquiryHeaders;
-                currentGenericData = inquiryStudentsData.map(inquiry => {
-                    return {
-                        rowIndex: inquiry.rowIndex,
-                        values: inquiryHeaders.map(h => inquiry[h])
-                    };
-                });
-                openGenericEditModal(sn, parseInt(ri));
-            }
-        } else if (deleteBtn) {
-            const sn = deleteBtn.dataset.sheetName;
-            const ri = deleteBtn.dataset.rowIndex;
-            if (sn && ri) handleGenericDeleteRow(sn, parseInt(ri));
-        }
-    });
-
-    async function loadInquiryData() {
-        showMessage(D.inquiryListMessage, 'Loading inquiry data...', 'info');
-        const result = await callBackendApi('getSheetData', { sheetName: 'InquiryStudents' });
-        if (result?.success && result.data) {
-            hideMessage(D.inquiryListMessage);
-            inquiryHeaders = result.data.headers;
-            inquiryStudentsData = result.data.rows.map(row => {
-                const inquiryObject = { rowIndex: row.rowIndex };
-                inquiryHeaders.forEach((header, index) => {
-                    inquiryObject[header] = row.values[index];
-                });
-                return inquiryObject;
-            });
-            displayInquiryClasses();
-        } else {
-            showMessage(D.inquiryListMessage, result?.error || 'Failed to load inquiry data.', 'error');
-        }
-    }
-
-    function displayInquiryClasses() {
-        D.inquiryListMainContent.innerHTML = '';
-        const classListContainer = document.createElement('div');
-        classListContainer.id = 'inquiry-classes-list';
-        classListContainer.style.cssText = "display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 25px;";
-        
-        if (inquiryStudentsData.length === 0) {
-            classListContainer.innerHTML = `<p class="message warning">No new inquiries found.</p>`;
-            D.inquiryListMainContent.appendChild(classListContainer);
-            return;
-        }
-
-        const classes = [...new Set(inquiryStudentsData.map(item => item.ClassAppliedFor || 'Unspecified'))];
-        
-        classes.sort().forEach(className => {
-            const tile = document.createElement('div');
-            tile.className = 'class-tile';
-            tile.dataset.className = className;
-            const count = inquiryStudentsData.filter(s => (s.ClassAppliedFor || 'Unspecified') === className).length;
-            tile.innerHTML = `<i class="fas fa-user-tag"></i><h4>${sanitizeHTML(className)}</h4><p>${count} Inquiries</p>`;
-            tile.addEventListener('click', () => displayInquiriesForClass(className));
-            classListContainer.appendChild(tile);
-        });
-        D.inquiryListMainContent.appendChild(classListContainer);
-    }
-
-    function displayInquiriesForClass(className) {
-        D.inquiryListMainContent.innerHTML = '';
-        const inquiries = inquiryStudentsData.filter(s => (s.ClassAppliedFor || 'Unspecified') === className);
-
-        const headerDiv = document.createElement('div');
-        headerDiv.style.cssText = "display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;";
-
-        const backButton = document.createElement('button');
-        backButton.innerHTML = '<i class="fas fa-arrow-left"></i> Back to Classes';
-        backButton.className = 'btn cancel-btn back-to-classes-btn';
-        backButton.addEventListener('click', displayInquiryClasses);
-        headerDiv.appendChild(backButton);
-
-        const classTitle = document.createElement('h3');
-        classTitle.style.cssText = "text-align: right; flex-grow: 1; color: var(--primary-color); font-family: 'Titillium Web', sans-serif;";
-        classTitle.textContent = `Inquiries for: ${sanitizeHTML(className)}`;
-        headerDiv.appendChild(classTitle);
-        D.inquiryListMainContent.appendChild(headerDiv);
-
-        const tableContainer = document.createElement('div');
-        tableContainer.className = 'inquiry-table-container data-table-container';
-        const table = document.createElement('table');
-        table.className = 'inquiry-table data-table';
-        table.innerHTML = `<thead><tr><th>Name</th><th>Father's Name</th><th>Mobile</th><th>Address</th><th>Previous School</th><th>Actions</th></tr></thead><tbody id="current-inquiry-table-body"></tbody>`;
-        tableContainer.appendChild(table);
-        D.inquiryListMainContent.appendChild(tableContainer);
-
-        const tbody = document.getElementById('current-inquiry-table-body');
-        tbody.innerHTML = '';
-
-        if (inquiries.length === 0) {
-            tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;padding:30px;color:var(--text-light-color);">No inquiries for this class.</td></tr>`;
-        } else {
-            const frag = document.createDocumentFragment();
-            inquiries.forEach(inquiry => {
-                const tr = document.createElement('tr');
-                tr.dataset.inquiryData = JSON.stringify(inquiry);
-                tr.dataset.rowIndex = inquiry.rowIndex;
-                tr.innerHTML = `
-                    <td>${sanitizeHTML(inquiry.Name || 'N/A')}</td>
-                    <td>${sanitizeHTML(inquiry.FatherName || 'N/A')}</td>
-                    <td>${sanitizeHTML(inquiry.Mobile || 'N/A')}</td>
-                    <td>${sanitizeHTML(inquiry.Address || 'N/A')}</td>
-                    <td>${sanitizeHTML(inquiry.PreviousSchool || 'N/A')}</td>
-                    <td class="action-col">
-                        <i class="fas fa-user-check approve-btn" title="Approve & Admit Student" style="color: var(--success-color); cursor: pointer;"></i>
-                        <i class="fas fa-edit edit-btn-generic" title="Edit Inquiry" data-sheet-name="InquiryStudents" data-row-index="${inquiry.rowIndex}"></i>
-                        <i class="fas fa-trash-alt delete-btn generic-delete-btn" title="Delete Inquiry" data-sheet-name="InquiryStudents" data-row-index="${inquiry.rowIndex}"></i>
-                    </td>`;
-                frag.appendChild(tr);
-            });
-            tbody.appendChild(frag);
-        }
-    }
-
-    async function handleApproveInquiry(inquiryData, rowIndex) {
-        if (!confirm(`Approve and admit "${inquiryData.Name}"? This will add them to the main student list and remove them from inquiries.`)) return;
-        
-        const result = await callBackendApi('approveInquiryStudent', { inquiryData, inquiryRowIndex: rowIndex });
-
-        if (result?.success) {
-            showMessage(D.inquiryListMessage, result.message, 'success');
-            await loadInquiryData();
-            await loadStudentsAndClasses(false);
-        } else {
-            showMessage(D.inquiryListMessage, result?.error || 'Approval failed.', 'error');
-        }
-    }
-
         if(cachedTools.length > 0) { populateToolsView(); return; } 
         showMessage(D.toolsMessage, 'Loading tools...', 'info'); D.toolsViewContent.innerHTML = '';
         try { const response = await fetch('./tools.json'); if (!response.ok) throw new Error(`HTTP error ${response.status}`); cachedTools = await response.json(); populateToolsView(); } catch (error) { console.error("Error loading tools.json:", error); showMessage(D.toolsMessage, `Failed to load tools: ${error.message}`, 'error'); D.toolsViewContent.innerHTML = `<p class="message error">Could not load tools.json.</p>`; }
